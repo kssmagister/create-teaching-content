@@ -44,14 +44,16 @@ editorial.json (Vertrag, schema-validiert)
 - [x] Lehrer-/Schülerversion aus einer Quelle
 - [x] Evidenz-Warnhinweis + `verified`-Flags
 - [x] Beispiel-Unit „Schweiz im 2. Weltkrieg"
+- [x] Cover-Bild-Slot (`cover_image`, auch SVG)
+- [x] Überblicksseite: Lernziele + automatisches Inhaltsverzeichnis (beide Versionen)
+- [x] Nummerierte Rubriken, keine Titel-Dopplung bei Ein-Text-Rubriken
 
 ## 6. Roadmap
 
 **Phase 2**
 - [ ] Pandoc-Export (Markdown/HTML → DOCX, EPUB) als `export.py`
-- [ ] Cover-Bild optional ins Theme (image-Slot)
 - [ ] Lösungsteil separat (Schülerversion strikt ohne Lösungen)
-- [ ] Inhaltsverzeichnis mit Lernzielen
+- [ ] Arbeitsblätter im Inhaltsverzeichnis
 
 **Phase 3**
 - [ ] Vorlagen-Bibliothek (mehrere Themes/Fächer)

@@ -1,10 +1,11 @@
 // theme.typ -- Layout & Stil fuer Unterrichtseinheiten.
 // Ein Modul: liefert Seiten-Setup + wiederverwendbare Bausteine.
-// Alles ergibt EIN durchpaginiertes Dokument (Cover -> Lehrerteil -> Sektionen -> Arbeitsblaetter -> Kolophon).
+// Ergibt EIN durchpaginiertes Dokument:
+//   Cover -> Ueberblick (Lernziele + Inhalt) -> [Lehrerteil] -> Rubriken -> Arbeitsblaetter -> Kolophon
 
 // ---- Schriften ---------------------------------------------------------
-// Die im Ausgangsdokument empfohlenen Fonts (Newsreader/Spectral/Libre Franklin)
-// muessen installiert sein; sonst greifen die Fallbacks. Installation siehe README.
+// Wunsch-Fonts (Newsreader/Spectral/Libre Franklin) muessen installiert sein,
+// sonst greifen die Fallbacks (Georgia/Arial). Details im README.
 #let display-font = ("Newsreader", "Georgia", "New Computer Modern")
 #let body-font = ("Spectral", "Georgia", "New Computer Modern")
 #let sans-font = ("Libre Franklin", "Arial", "DejaVu Sans")
@@ -27,7 +28,6 @@
     paper: "a4",
     margin: (top: 2.4cm, bottom: 2.4cm, x: 2.2cm),
     header: context {
-      // Kein Header auf der Coverseite (Seite 1).
       if counter(page).get().first() > 1 {
         set text(font: sans-font, size: 8.5pt, fill: muted)
         grid(
@@ -47,11 +47,34 @@
   )
   set text(font: body-font, size: 11pt, fill: ink, lang: "de", hyphenate: true)
   set par(justify: true, leading: 0.72em, spacing: 1.1em)
+
+  // Rubriken (Level 1) werden nummeriert; Unterebenen nicht.
+  set heading(numbering: (..n) => if n.pos().len() == 1 { numbering("01", n.pos().first()) })
+
+  // Level-2/3-Ueberschriften: schlicht, in der Display-Schrift.
   show heading: set text(font: display-font, fill: ink)
-  show heading.where(level: 1): set text(size: 17pt)
   show heading.where(level: 2): set text(size: 13pt)
   show heading.where(level: 3): set text(size: 11.5pt)
-  show heading: it => block(above: 1.4em, below: 0.7em, it)
+  show heading.where(level: 2): it => block(above: 1.3em, below: 0.6em, it.body)
+  show heading.where(level: 3): it => block(above: 1.1em, below: 0.5em, it.body)
+
+  // Rubrik-Trenner (Level 1): eigene Seite, Nummer + Titel + Linie.
+  show heading.where(level: 1): it => context {
+    let nr = counter(heading).display()
+    pagebreak(weak: true)
+    block(above: 0em, below: 1.1em, breakable: false, {
+      line(length: 100%, stroke: 0.9pt + accent)
+      v(0.55em)
+      grid(
+        columns: (auto, 1fr),
+        column-gutter: 0.8em,
+        align: horizon,
+        text(font: sans-font, size: 20pt, weight: "bold", fill: accent)[#nr],
+        text(font: display-font, size: 17pt, fill: ink)[#it.body],
+      )
+    })
+  }
+
   set list(indent: 0.6em, spacing: 0.7em)
   set enum(indent: 0.6em, spacing: 0.7em)
   show quote.where(block: true): it => block(
@@ -86,23 +109,29 @@
 #let warn-box(title: "Prüfen vor Gebrauch", body) = callout(title: title, fill: warn-soft, bar: warn, body)
 
 // ---- Cover -------------------------------------------------------------
-#let cover(unit-title: "", subject: "", grade: "", duration: "", lines: (), variant: "teacher") = {
+#let cover(unit-title: "", subject: "", grade: "", duration: "", lines: (), variant: "teacher", image-path: none) = {
   set page(header: none, footer: none)
-  v(3.5cm)
+  v(2.3cm)
   align(center)[
     #text(font: sans-font, size: 10pt, fill: accent, tracking: 2pt)[UNTERRICHTSEINHEIT]
-    #v(0.8cm)
-    #text(font: display-font, size: 30pt, weight: "medium", fill: ink)[#unit-title]
     #v(0.7cm)
+    #text(font: display-font, size: 30pt, weight: "medium", fill: ink)[#unit-title]
+    #v(0.5cm)
     #text(font: sans-font, size: 11pt, fill: muted)[
       #subject
       #if grade != "" [ · #grade ]
       #if duration != "" [ · #duration ]
     ]
   ]
-  v(1.4cm)
-  align(center, line(length: 30%, stroke: 0.6pt + line-grey))
-  v(1.4cm)
+  if image-path != none {
+    v(1.1cm)
+    align(center, box(width: 52%, image(image-path, width: 100%)))
+    v(1.0cm)
+  } else {
+    v(1.3cm)
+    align(center, line(length: 28%, stroke: 0.6pt + line-grey))
+    v(1.3cm)
+  }
   if lines.len() > 0 {
     align(center)[
       #for l in lines {
@@ -121,28 +150,31 @@
   pagebreak()
 }
 
-// ---- Sektions-Trenner --------------------------------------------------
-#let section-divider(title, purpose: none) = {
-  block(above: 1.6em, below: 1em, {
-    text(font: sans-font, size: 9pt, fill: accent, tracking: 1.5pt)[RUBRIK]
-    v(0.2em, weak: true)
-    text(font: display-font, size: 15pt, fill: ink)[#title]
-    if purpose != none [
-      #v(0.2em, weak: true)
-      #text(font: sans-font, size: 9.5pt, fill: muted, style: "italic")[#purpose]
-    ]
-    v(0.3em, weak: true)
-    line(length: 100%, stroke: 0.6pt + accent)
-  })
+// ---- Ueberblick: Lernziele + Inhaltsverzeichnis ------------------------
+#let overview(objectives-body, variant: "teacher") = {
+  objectives-box(objectives-body)
+  v(1em)
+  heading(level: 2, outlined: false, numbering: none)[Inhalt]
+  show outline.entry: set text(font: sans-font, size: 10.5pt)
+  outline(title: none, target: heading.where(level: 1), depth: 1)
 }
 
-// ---- Artikel (zweispaltig) --------------------------------------------
-#let article(title: "", source: none, body) = {
+// ---- Rubrik-Trenner (nutzt die Level-1-Ueberschrift) -------------------
+#let section-divider(title, purpose: none) = {
+  heading(level: 1, title)
+  if purpose != none {
+    text(font: sans-font, size: 9.5pt, fill: muted, style: "italic")[#purpose]
+    v(0.6em)
+  }
+}
+
+// ---- Artikel (zweispaltig; Titel optional) -----------------------------
+#let article(title: none, source: none, body) = {
   block(breakable: true, {
-    heading(level: 2, title)
+    if title != none { heading(level: 2, outlined: false, numbering: none, title) }
     if source != none {
       text(font: sans-font, size: 8.5pt, fill: muted)[Quelle: #source]
-      v(0.3em, weak: true)
+      v(0.4em, weak: true)
     }
     columns(2, gutter: 1.2em, body)
   })
@@ -163,10 +195,9 @@
   block(breakable: true, {
     text(font: sans-font, size: 9pt, fill: accent, tracking: 1.5pt)[ARBEITSBLATT]
     v(0.2em, weak: true)
-    heading(level: 2, title)
+    heading(level: 2, outlined: false, numbering: none, title)
     callout(title: "Auftrag", fill: accent-soft, bar: accent)[#task]
     if body != none { body }
-    // Differenzierung nur in der Lehrerversion vollstaendig zeigen.
     if variant == "teacher" and (support != none or extension != none) {
       callout(title: "Differenzierung", fill: teach-soft, bar: teach)[
         #if support != none [*Unterstützung:* #support \ ]
@@ -181,7 +212,7 @@
 // ---- Kolophon / Quellen ------------------------------------------------
 #let colophon(sources: (), keywords: ()) = {
   pagebreak(weak: true)
-  heading(level: 2, "Quellen & Angaben")
+  heading(level: 2, outlined: false, numbering: none)[Quellen & Angaben]
   if sources.len() > 0 {
     for s in sources [ - #s ]
   } else [

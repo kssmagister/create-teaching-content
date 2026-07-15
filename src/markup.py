@@ -52,9 +52,16 @@ def inline(text: str) -> str:
 def md_to_typst(md: str) -> str:
     """Wandelt einen Markdown-Block in Typst-Markup um."""
     lines = md.replace("\r\n", "\n").split("\n")
-    out, para = [], []
+    out, para, quote = [], [], []
+
+    def flush_quote():
+        if quote:
+            out.append("#quote(block: true)[" + inline(" ".join(quote).strip()) + "]")
+            out.append("")
+            quote.clear()
 
     def flush():
+        flush_quote()
         if para:
             txt = inline(" ".join(para).strip())
             if txt:
@@ -102,13 +109,14 @@ def md_to_typst(md: str) -> str:
             ensure_gap_before_list()
             out.append("+ " + inline(m.group(1)))
             continue
-        # Zitat
+        # Zitat (aufeinanderfolgende Zeilen -> ein Block)
         m = re.match(r">\s?(.*)", stripped)
         if m:
-            flush()
-            out.append("#quote(block: true)[" + inline(m.group(1)) + "]")
-            out.append("")
+            if para:
+                flush()
+            quote.append(m.group(1))
             continue
+        flush_quote()
         para.append(stripped)
 
     flush()

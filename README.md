@@ -78,11 +78,24 @@ Ausgaben landen in `units/<unit>/out/` (per `.gitignore` ausgeschlossen).
 ```
 units/001-schweiz-2wk/
 ├── editorial.json        ← vom LLM erzeugt, gegen schema/editorial.schema.json validiert
+├── cover.svg             ← optionales Cover-Bild (Feld "cover_image"), ersetzbar
 ├── clippings/            ← Quelltexte als Markdown mit Front-Matter
 │   ├── 01-schweiz-1939.md
 │   └── ...
 └── out/                  ← generiert (main-*.typ, *.pdf)
 ```
+
+**Aufbau des erzeugten Hefts:** Cover (optional mit Bild) → Überblick
+(Lernziele + automatisches **Inhaltsverzeichnis** mit Seitenzahlen, in beiden
+Versionen) → [Lehrerhinweise, nur Lehrerversion] → nummerierte Rubriken →
+Arbeitsblätter → Quellen. Enthält eine Rubrik nur *einen* Text, dient der
+Rubriktitel zugleich als Titel (kein doppelter Kopf).
+
+**Cover-Bild:** Feld `cover_image` in `editorial.json` = Dateiname relativ zum
+Unit-Ordner (PNG/JPG/**SVG**). Fehlt es, nutzt das Cover ein rein
+typografisches Layout. Das mitgelieferte `cover.svg` ist ein abstrakter
+Platzhalter – für den Druck durch ein eigenes/generiertes Motiv ersetzen (siehe
+[`prompts/cover.md`](prompts/cover.md)).
 
 **Clipping-Front-Matter** (die `id` verknüpft mit `editorial.json`):
 

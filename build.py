@@ -36,7 +36,25 @@ def opt(value):
     return tstr(value) if value else "none"
 
 
-def build_typst(data: dict, clips: dict, variant: str) -> str:
+def objectives_body(lo: dict) -> list:
+    """Baut das Typst-Markup fuer die Lernziel-Box (in beiden Varianten genutzt)."""
+    out = ["*Kognitive Lernziele* \\"]
+    for o in lo["cognitive"]:
+        out.append("- " + inline(o))
+    if lo.get("skills"):
+        out.append("")
+        out.append("*Fähigkeiten* \\")
+        for o in lo["skills"]:
+            out.append("- " + inline(o))
+    if lo.get("metacognitive"):
+        out.append("")
+        out.append("*Metakognition / Reflexion* \\")
+        for o in lo["metacognitive"]:
+            out.append("- " + inline(o))
+    return out
+
+
+def build_typst(data: dict, clips: dict, variant: str, cover_image=None) -> str:
     """Erzeugt die vollstaendige Typst-Quelle als String."""
     teacher = variant == "teacher"
     L = ['#import "theme.typ": *', ""]
@@ -46,40 +64,29 @@ def build_typst(data: dict, clips: dict, variant: str) -> str:
     )
     L.append("")
 
-    # --- Cover ---
+    # --- Cover (optional mit Bild) ---
     lines = data.get("cover_lines", [])
     arr = "(" + "".join(tstr(x) + ", " for x in lines) + ")"
+    img_arg = f", image-path: {tstr(cover_image)}" if cover_image else ""
     L.append(
         f'#cover(unit-title: {tstr(data["unit_title"])}, '
         f'subject: {tstr(data.get("subject", ""))}, '
         f'grade: {tstr(data.get("grade_level", ""))}, '
         f'duration: {tstr(data.get("duration", ""))}, '
-        f"lines: {arr}, variant: {tstr(variant)})"
+        f"lines: {arr}, variant: {tstr(variant)}{img_arg})"
     )
+    L.append("")
+
+    # --- Ueberblick: Lernziele + Inhaltsverzeichnis (beide Varianten) ---
+    L.append(f"#overview(variant: {tstr(variant)})[")
+    L.extend(objectives_body(data["learning_objectives"]))
+    L.append("]")
     L.append("")
 
     # --- Lehrerteil (nur in der Lehrerversion) ---
     if teacher:
-        L.append('#heading(level: 1, "Lehrerhinweise")')
-        L.append("")
-
-        # Lernziele
-        lo = data["learning_objectives"]
-        obj = ["#objectives-box[", "*Kognitive Lernziele* \\"]
-        for o in lo["cognitive"]:
-            obj.append("- " + inline(o))
-        if lo.get("skills"):
-            obj.append("")
-            obj.append("*Fähigkeiten* \\")
-            for o in lo["skills"]:
-                obj.append("- " + inline(o))
-        if lo.get("metacognitive"):
-            obj.append("")
-            obj.append("*Metakognition / Reflexion* \\")
-            for o in lo["metacognitive"]:
-                obj.append("- " + inline(o))
-        obj.append("]")
-        L.extend(obj)
+        L.append("#pagebreak()")
+        L.append('#heading(level: 2, outlined: false, numbering: none)[Lehrerhinweise]')
         L.append("")
 
         # Didaktische Begruendung (editor_note)
@@ -121,19 +128,23 @@ def build_typst(data: dict, clips: dict, variant: str) -> str:
         # Empfohlene Reihenfolge
         order = data.get("recommended_order")
         if order:
-            L.append('#heading(level: 2, "Empfohlene Reihenfolge")')
-            for i, cid in enumerate(order, 1):
+            L.append('#heading(level: 3, outlined: false, numbering: none)[Empfohlene Reihenfolge]')
+            for cid in order:
                 title = clips.get(cid, {}).get("title", cid)
                 L.append(f"+ {inline(title)}")
             L.append("")
 
-    # --- Sektionen mit Artikeln ---
+    # --- Rubriken mit Artikeln ---
+    # Bei genau einem Text pro Rubrik entfaellt der doppelte Artikel-Titel:
+    # die Rubrik-Ueberschrift dient dann zugleich als Titel.
     used = set()
     for sec in data["sections"]:
         purpose = opt(sec.get("purpose", "")) if teacher else "none"
         L.append(f"#section-divider({tstr(sec['section_title'])}, purpose: {purpose})")
         L.append("")
-        for cid in sec.get("clippings", []):
+        clip_ids = sec.get("clippings", [])
+        single = len(clip_ids) == 1
+        for cid in clip_ids:
             used.add(cid)
             clip = clips.get(cid)
             if clip is None:
@@ -144,9 +155,8 @@ def build_typst(data: dict, clips: dict, variant: str) -> str:
                 L.append("")
                 continue
             source = clip.get("source") or clip.get("url") or ""
-            L.append(
-                f"#article(title: {tstr(clip['title'])}, source: {opt(source)})["
-            )
+            title_arg = "none" if single else tstr(clip["title"])
+            L.append(f"#article(title: {title_arg}, source: {opt(source)})[")
             L.append(md_to_typst(clip["_body"]))
             L.append("]")
             L.append("")
@@ -213,7 +223,19 @@ def main():
     out_dir = unit / "out"
     out_dir.mkdir(exist_ok=True)
     shutil.copyfile(THEME, out_dir / "theme.typ")
-    typ = build_typst(data, clips, args.variant)
+
+    # Cover-Bild (optional): relativ zum Unit-Ordner, wird nach out/ kopiert.
+    cover_image = None
+    ci = data.get("cover_image")
+    if ci:
+        src = unit / ci
+        if src.exists():
+            cover_image = "cover" + src.suffix
+            shutil.copyfile(src, out_dir / cover_image)
+        else:
+            print(f"  [Warnung] cover_image '{ci}' nicht gefunden – wird ignoriert.")
+
+    typ = build_typst(data, clips, args.variant, cover_image=cover_image)
     main_typ = out_dir / f"main-{args.variant}.typ"
     main_typ.write_text(typ, encoding="utf-8")
     print(f"  Typst geschrieben: {main_typ}")

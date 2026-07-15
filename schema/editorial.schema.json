@@ -62,6 +62,10 @@
       }
     },
     "cover_lines": { "type": "array", "items": { "type": "string" }, "maxItems": 4 },
+    "cover_image": {
+      "type": "string",
+      "description": "Optional: Dateiname eines Cover-Bilds (PNG/JPG/SVG), relativ zum Unit-Ordner. Fehlt es, nutzt das Cover ein rein typografisches Layout."
+    },
     "sections": {
       "type": "array",
       "minItems": 1,
