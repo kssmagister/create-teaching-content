@@ -1,0 +1,7 @@
+# Nur eine echte Python-Abhaengigkeit: Schema-Validierung.
+# Fehlt sie, laeuft der Build trotzdem (ohne Validierung).
+jsonschema>=4.0
+
+# Das Rendering uebernimmt das Typst-CLI (separat installieren, siehe README):
+#   winget install --id Typst.Typst
+# Optionale Multiformat-Konvertierung via Pandoc (separat, siehe README).

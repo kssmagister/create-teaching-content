@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "unit_title": "Die Schweiz im Zweiten Weltkrieg",
+  "subject": "Geschichte",
+  "grade_level": "Sek I / Sek II (ca. 9.–11. Schuljahr)",
+  "duration": "6–8 Lektionen",
+
+  "learning_objectives": {
+    "cognitive": [
+      "die besondere Lage der Schweiz zwischen den Kriegsparteien erklären",
+      "wirtschaftliche Verflechtungen und Flüchtlingspolitik analysieren",
+      "Kontinuitäten und Brüche der schweizerischen Neutralität einordnen"
+    ],
+    "skills": [
+      "Quellen kritisch auswerten und einordnen",
+      "eine historische Argumentation aufbauen und mit Belegen stützen"
+    ],
+    "metacognitive": [
+      "das eigene moralische Urteil über historisches Handeln reflektieren"
+    ]
+  },
+
+  "evidence_base": {
+    "principles": ["Retrieval Practice", "Concrete Examples", "Historical Perspective Taking"],
+    "key_research": [
+      {
+        "study": "Dunlosky et al. (2013), Improving Students' Learning",
+        "principle": "Abrufübung (Practice Testing)",
+        "effect_size": "hohe Wirksamkeit",
+        "application": "kurze Abruffragen zu Schlüsselbegriffen zu Beginn jeder Lektion",
+        "verified": true
+      },
+      {
+        "study": "Hattie & Donoghue (2016)",
+        "principle": "Retrieval & Elaboration",
+        "effect_size": 0.82,
+        "application": "als Beispiel für eine effektstärkenbasierte Begründung – Zahl vor Gebrauch prüfen",
+        "verified": false
+      }
+    ]
+  },
+
+  "editor_note": {
+    "content": "Diese Einheit beleuchtet die ambivalente Rolle der Schweiz im Zweiten Weltkrieg. Ziel ist **nicht** ein einfaches Urteil („Schweiz = gut/schlecht“), sondern differenziertes historisches Denken. Im Zentrum stehen die Spannungsfelder zwischen wirtschaftlichem Überleben, militärischer Verteidigung und humanitärer Verantwortung.\n\nMethodisch verbindet die Einheit kurzen Wissensaufbau mit Quellenarbeit und einer abschliessenden Urteilsbildung. Rechnen Sie mit der typischen Schülervorstellung, Neutralität sei „wertneutral“ – diese sollte gezielt hinterfragt werden.",
+    "key_takeaways": [
+      "Neutralität war nie wertneutral.",
+      "Wirtschaftliche Überlebensstrategie und humanitäre Verantwortung standen in Spannung.",
+      "Geschichtsbilder wandeln sich – die spätere Aufarbeitung (Bergier-Kommission) zeigt das deutlich."
+    ]
+  },
+
+  "cover_lines": [
+    "Wie neutral war die Schweiz wirklich?",
+    "Wirtschaft, Flüchtlinge und Geistige Landesverteidigung",
+    "Moralische Grauzonen im Zweiten Weltkrieg"
+  ],
+
+  "sections": [
+    {
+      "section_title": "Einstieg: Zwischen den Fronten",
+      "purpose": "Vorwissen aktivieren, Advance Organizer aufbauen",
+      "clippings": ["schweiz-1939"]
+    },
+    {
+      "section_title": "Wirtschaft und Anpassung",
+      "purpose": "die ökonomische Dimension der Neutralität verstehen",
+      "clippings": ["wirtschaft-reich"]
+    },
+    {
+      "section_title": "Flüchtlingspolitik und Humanität",
+      "purpose": "moralische Dilemmata und Handlungsspielräume erkennen",
+      "clippings": ["j-stempel"]
+    },
+    {
+      "section_title": "Innere Haltung",
+      "purpose": "die gesellschaftliche und militärische Dimension analysieren",
+      "clippings": ["geistige-landesverteidigung"]
+    }
+  ],
+
+  "recommended_order": ["schweiz-1939", "wirtschaft-reich", "j-stempel", "geistige-landesverteidigung"],
+
+  "worksheets": [
+    {
+      "id": "ab-dilemma",
+      "title": "Moralische Dilemmata bewerten",
+      "task": "Wähle eine der behandelten Entscheidungen (Wirtschaftshandel, „J“-Stempel, Grenzschliessung 1942). Beschreibe den Handlungsspielraum der Verantwortlichen und begründe, wie du die Entscheidung bewertest.",
+      "body": "**Schritt 1 – Fakten sammeln:** Was genau wurde entschieden?\n___\n___\n\n**Schritt 2 – Perspektiven:** Welche Zwänge und Alternativen gab es?\n___\n___\n\n**Schritt 3 – Urteil:** Deine begründete Bewertung.\n___\n___",
+      "differentiation": {
+        "support": "vereinfachte Leitfragen und ein Wortschatzkasten (Neutralität, Anpassung, Handlungsspielraum)",
+        "extension": "Vergleich mit einem anderen neutralen Staat (z. B. Schweden) anhand einer Zusatzquelle"
+      }
+    }
+  ],
+
+  "assessment": {
+    "formative": "Exit-Ticket: „Welche Entscheidung der Schweiz findest du am schwierigsten zu bewerten – und warum?“",
+    "summative": "Kurzessay: „War die schweizerische Neutralität im Zweiten Weltkrieg moralisch vertretbar?“ (mit Quellenbeleg)"
+  },
+
+  "materials_needed": ["Quellenpaket", "Zeitleiste zum Ausfüllen", "Arbeitsblatt „Moralische Dilemmata“"],
+  "keywords": ["Bewaffnete Neutralität", "Geistige Landesverteidigung", "J-Stempel", "Bergier-Kommission", "Anpassung", "Widerstand"],
+  "sources": [
+    "Beispieltexte in eigener Formulierung – vor dem Unterrichtseinsatz durch geprüfte Fachliteratur/Quellen ersetzen oder ergänzen.",
+    "Zur Vertiefung: Unabhängige Expertenkommission Schweiz – Zweiter Weltkrieg (Bergier-Bericht)."
+  ]
+}
