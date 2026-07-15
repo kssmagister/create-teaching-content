@@ -46,10 +46,11 @@ winget install --id Typst.Typst
 pip install -r requirements.txt
 ```
 
-**Schriften** (optional, für das beabsichtigte Design): Newsreader, Spectral,
-Libre Franklin (Google Fonts) installieren *oder* als `.ttf` nach `assets/fonts/`
-legen – `build.py` gibt Typst diesen Ordner mit `--font-path` mit. Ohne sie
-greifen Fallback-Schriften (Georgia / New Computer Modern).
+**Schriften:** Newsreader, Spectral und Libre Franklin (SIL OFL) sind bereits in
+[`assets/fonts/`](assets/fonts/) gebündelt – `build.py` gibt Typst diesen Ordner
+via `--font-path` mit, es ist also **nichts weiter zu installieren**. Details &
+Lizenz: [`assets/fonts/README.md`](assets/fonts/README.md). (Ohne diese Fonts
+würde Typst auf Georgia / New Computer Modern zurückfallen.)
 
 ---
 
