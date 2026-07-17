@@ -59,9 +59,12 @@ editorial.json (Vertrag, schema-validiert)
 ## 6. Roadmap
 
 **Phase 2**
+- [x] Docker-Container (Typst + Fonts + Web-Schicht), `docker-compose`
+- [x] Dünne FastAPI-Oberfläche: Units/Dateien verwalten, Build auslösen, PDF liefern
+      (Single-User hinter Tailscale)
+- [ ] LLM-Automatisierung `agent.py` (Claude-API) + `kontext.json` (Steuerungsinstanz)
 - [ ] Ingestion `ingest.py`: `sources/` (PDF/DOCX/HTML) → Markdown (Pandoc/Docling)
 - [ ] Pandoc-Export (Markdown/HTML → DOCX, EPUB) als `export.py`
-- [ ] Modulare Mehrschritt-Generierung mit `kontext.json` (Steuerungsinstanz)
 
 **Phase 3**
 - [ ] Slides aus derselben `editorial.json` (Typst `touying`)

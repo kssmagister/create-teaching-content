@@ -118,6 +118,43 @@ AFB-Box – gemäß gängigen Empfehlungen für Unterrichtsmaterial.
 
 ---
 
+## Server-Betrieb (Docker + Web-Oberfläche)
+
+Für ortsunabhängigen Zugriff (Tablet, Browser) läuft das Projekt als Container
+auf dem Ubuntu-Server – bewusst **Single-User hinter Tailscale**, ohne eigene
+Benutzerverwaltung.
+
+```bash
+# auf dem Server
+docker compose up -d --build
+# Oberfläche: http://<server-im-tailnet>:8000
+```
+
+Der Container enthält Typst + die gebündelten Fonts; `./units` ist ein
+**Volume** und bleibt ein Git-Repo auf dem Host (Snapshots überleben Rebuilds).
+Docling bleibt bewusst draußen (sonst GB-Image).
+
+**Die Web-Oberfläche kann:** Einheiten anlegen/auswählen · `sources/` und
+`images/` per Upload verwalten · `editorial.json` bearbeiten **mit
+Live-Schema-Validierung** · PDF bauen (teacher/student/`--solutions`) · PDF
+ansehen/herunterladen. Der Build läuft synchron (Typst < 1 s), daher ohne
+Job-Queue.
+
+**Lokal entwickeln (ohne Docker):**
+
+```powershell
+pip install -r requirements.txt
+python -m uvicorn server.app:app --reload
+# http://127.0.0.1:8000
+```
+
+**Sicherheit:** Der Port ist für den Zugriff über das private Tailnet gedacht –
+nicht öffentlich exposen. Die LLM-Automatisierung (Claude-API, `agent.py`) ist
+als nächster Schritt vorgesehen; `ANTHROPIC_API_KEY` ist in `docker-compose.yml`
+bereits reserviert.
+
+---
+
 ## Grenzen – bitte lesen
 
 Dieses Werkzeug erzeugt *Layout und Struktur*. Es ersetzt **keine**

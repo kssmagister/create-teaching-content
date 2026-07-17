@@ -1,0 +1,16 @@
+services:
+  ctc:
+    build: .
+    image: create-teaching-content
+    container_name: ctc
+    ports:
+      # Ueber das Tailscale-Netz erreichbar via <server>:8000 (keine Auth noetig,
+      # da privat). Fuer rein lokalen Zugriff ggf. auf 127.0.0.1:8000 binden.
+      - "8000:8000"
+    volumes:
+      # Units bleiben ein Git-Repo auf dem Host -> Snapshots ueberleben Rebuilds.
+      - ./units:/app/units
+    environment:
+      # Fuer Schritt 3 (LLM-Automatisierung, Claude-API):
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    restart: unless-stopped

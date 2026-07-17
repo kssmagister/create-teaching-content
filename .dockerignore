@@ -1,0 +1,9 @@
+.git
+**/out/
+**/__pycache__/
+*.pyc
+*.pdf
+*~
+nul
+.venv/
+venv/

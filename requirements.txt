@@ -1,7 +1,10 @@
-# Nur eine echte Python-Abhaengigkeit: Schema-Validierung.
-# Fehlt sie, laeuft der Build trotzdem (ohne Validierung).
+# Schema-Validierung (Build laeuft auch ohne, dann ungeprueft)
 jsonschema>=4.0
 
-# Das Rendering uebernimmt das Typst-CLI (separat installieren, siehe README):
-#   winget install --id Typst.Typst
-# Optionale Multiformat-Konvertierung via Pandoc (separat, siehe README).
+# Web-Schicht (FastAPI): Verwaltung von Units/Dateien, Build ausloesen, PDF liefern
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+
+# Rendering uebernimmt das Typst-CLI (im Container installiert, lokal via winget/scoop).
+# Optionale Multiformat-Konvertierung via Pandoc (separat).
