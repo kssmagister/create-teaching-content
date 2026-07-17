@@ -1,0 +1,10 @@
+# Textdateien einheitlich mit LF (Zielumgebung ist Linux/Docker).
+* text=auto eol=lf
+
+# Binaerdateien nicht anfassen.
+*.ttf binary
+*.otf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary

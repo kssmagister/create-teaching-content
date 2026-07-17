@@ -2,6 +2,11 @@
 units/**/out/
 *.pdf
 
+# Secrets -- NIEMALS committen (Claude-API-Key etc.)
+.env
+.env.*
+!.env.example
+
 # Python
 __pycache__/
 *.pyc
