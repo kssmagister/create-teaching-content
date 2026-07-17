@@ -8,6 +8,7 @@ python-multipart>=0.0.9
 
 # LLM-Automatisierung (Schritt 3: agent.py)
 anthropic>=0.75
+pypdf>=5.0
 
 # Rendering uebernimmt das Typst-CLI (im Container installiert, lokal via winget/scoop).
 # Optionale Multiformat-Konvertierung via Pandoc (separat).

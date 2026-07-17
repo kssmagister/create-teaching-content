@@ -7,7 +7,7 @@ generierten Zustand auf (kontext.json), damit sich z.B. Aufgaben auf den
 tatsaechlich erzeugten Haupttext beziehen (Grounding gegen Halluzination).
 
 Ablauf:
-  1. Rohmaterial aus units/<unit>/sources/ einlesen (txt/md direkt, docx via
+  1. Rohmaterial aus units/<unit>/sources/ einlesen (txt/md direkt, docx/pdf via
      eingebautem Parser; andere Formate werden uebersprungen und gemeldet).
   2. Fuenf gestufte Claude-Aufrufe, jeweils mit Structured Outputs
      (output_config.format) fuer garantiert valides JSON je Stufe.
@@ -27,6 +27,7 @@ import zipfile
 from pathlib import Path
 
 import anthropic
+from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parent
 MODEL = "claude-opus-4-8"
@@ -57,6 +58,18 @@ def _safe_read_docx(path: Path) -> str:
     return re.sub(r"\n{3,}", "\n\n", text).strip()
 
 
+def _safe_read_pdf(path: Path) -> str:
+    """Extrahiert Fliesstext aus .pdf via pypdf. Bei gescannten/reinen Bild-PDFs
+    liefert dies wenig oder keinen Text (kein OCR) - das wird per Warnung gemeldet."""
+    reader = PdfReader(str(path))
+    pages = [p.extract_text() or "" for p in reader.pages]
+    text = "\n\n".join(pages).strip()
+    if len(text) < 200:
+        print(f"  [Warnung] '{path.name}': kaum Text extrahiert ({len(text)} Zeichen) - "
+              f"vermutlich ein gescanntes/Bild-PDF ohne Textebene. Ggf. Word-Original hochladen.")
+    return text
+
+
 def read_sources(unit: Path) -> str:
     """Liest alles aus sources/ als Klartext ein; meldet nicht unterstuetzte Formate."""
     src_dir = unit / "sources"
@@ -70,6 +83,8 @@ def read_sources(unit: Path) -> str:
             parts.append(f"--- Quelle: {f.name} ---\n{f.read_text(encoding='utf-8', errors='replace')}")
         elif f.suffix.lower() == ".docx":
             parts.append(f"--- Quelle: {f.name} ---\n{_safe_read_docx(f)}")
+        elif f.suffix.lower() == ".pdf":
+            parts.append(f"--- Quelle: {f.name} ---\n{_safe_read_pdf(f)}")
         else:
             print(f"  [Hinweis] '{f.name}': Format wird von agent.py noch nicht gelesen (spaeter ingest.py). Uebersprungen.")
     text = "\n\n".join(parts)
