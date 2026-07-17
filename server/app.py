@@ -4,6 +4,7 @@ Bewusst duenn und Single-User (hinter Tailscale, keine Auth). Der Build
 delegiert an build.py (Subprozess), damit die gesamte Render-Logik wiederverwendet wird.
 """
 import json
+import os
 import re
 import subprocess
 import sys
@@ -161,6 +162,22 @@ def delete_file(unit: str, kind: str, name: str):
     if p.exists():
         p.unlink()
     return {"ok": True}
+
+
+# ---- LLM-Generierung (Schritt 3: agent.py) ------------------------------
+@app.post("/api/units/{unit}/generate")
+def generate(unit: str):
+    d = _unit_dir(unit)
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        raise HTTPException(400, "ANTHROPIC_API_KEY ist nicht gesetzt (.env pruefen).")
+    if not _list(d / "sources"):
+        raise HTTPException(400, "Keine Dateien in sources/ - zuerst Rohmaterial hochladen.")
+    cmd = [sys.executable, str(ROOT / "agent.py"), f"units/{unit}"]
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    log = (res.stdout + res.stderr).strip()
+    ok = res.returncode == 0 and (d / "editorial.json").exists()
+    editorial = (d / "editorial.json").read_text(encoding="utf-8") if ok else None
+    return {"ok": ok, "log": log, "editorial": editorial}
 
 
 # ---- Build -------------------------------------------------------------

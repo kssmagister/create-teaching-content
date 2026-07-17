@@ -6,5 +6,8 @@ fastapi>=0.110
 uvicorn[standard]>=0.29
 python-multipart>=0.0.9
 
+# LLM-Automatisierung (Schritt 3: agent.py)
+anthropic>=0.75
+
 # Rendering uebernimmt das Typst-CLI (im Container installiert, lokal via winget/scoop).
 # Optionale Multiformat-Konvertierung via Pandoc (separat).

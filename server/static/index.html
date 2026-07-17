@@ -88,6 +88,11 @@
 
   <div class="card">
     <h2>editorial.json</h2>
+    <div class="row" style="margin-bottom:8px">
+      <button id="btn-generate" class="ghost" onclick="generateEditorial()">Aus sources/ generieren (Claude)</button>
+      <span class="muted">Ueberschreibt editorial.json (Sicherung: editorial.json.bak). Ergebnis vor dem Bauen pruefen!</span>
+    </div>
+    <div id="genmsg"></div>
     <textarea id="editor" spellcheck="false"></textarea>
     <div class="row" style="margin-top:8px">
       <button onclick="saveEditorial()">Validieren &amp; speichern</button>
@@ -194,6 +199,22 @@ async function saveEditorial(){
   if(res.ok){ m.className='msg ok'; m.textContent='Gespeichert & schema-valide.'
       + (res.warnings&&res.warnings.length?('\n'+res.warnings.join('\n')):''); }
   else { m.className='msg err'; m.textContent='Schema-Fehler:\n- '+res.errors.join('\n- '); }
+}
+
+async function generateEditorial(){
+  const btn=document.getElementById('btn-generate'); btn.disabled=true; btn.textContent='generiert … (kann 1-2 Minuten dauern)';
+  const m=document.getElementById('genmsg');
+  m.innerHTML='';
+  const r=await fetch(`/api/units/${current}/generate`,{method:'POST'});
+  const res=await r.json();
+  if(res.ok){
+    m.innerHTML='<div class="msg ok">Generiert. Bitte inhaltlich pruefen (Fakten-Check!), bevor gebaut wird.</div>';
+    if(res.log) m.innerHTML+=`<div class="log">${res.log}</div>`;
+    await loadEditorial();
+  } else {
+    m.innerHTML=`<div class="msg err">Generierung fehlgeschlagen.</div><div class="log">${res.log||res.detail||''}</div>`;
+  }
+  btn.disabled=false; btn.textContent='Aus sources/ generieren (Claude)';
 }
 
 async function buildUnit(){
