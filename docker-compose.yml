@@ -4,9 +4,10 @@ services:
     image: create-teaching-content
     container_name: ctc
     ports:
-      # Ueber das Tailscale-Netz erreichbar via <server>:8000 (keine Auth noetig,
-      # da privat). Fuer rein lokalen Zugriff ggf. auf 127.0.0.1:8000 binden.
-      - "8000:8000"
+      # Ueber das Tailscale-Netz erreichbar via <server>:8010 (keine Auth noetig,
+      # da privat). Host-Port 8010, da 8000 bereits von kss-audio-workflow-backend
+      # belegt ist. Fuer rein lokalen Zugriff ggf. auf 127.0.0.1:8010 binden.
+      - "8010:8000"
     volumes:
       # Units bleiben ein Git-Repo auf dem Host -> Snapshots ueberleben Rebuilds.
       - ./units:/app/units
