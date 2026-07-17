@@ -44,27 +44,35 @@ editorial.json (Vertrag, schema-validiert)
 - [x] Lehrer-/Schülerversion aus einer Quelle
 - [x] Evidenz-Warnhinweis + `verified`-Flags
 - [x] Beispiel-Unit „Schweiz im 2. Weltkrieg"
-- [x] Cover-Bild-Slot (`cover_image`, auch SVG)
+- [x] Cover-Bild-Slot (`meta.cover_bild`, auch SVG)
 - [x] Überblicksseite: Lernziele + automatisches Inhaltsverzeichnis (beide Versionen)
-- [x] Nummerierte Rubriken, keine Titel-Dopplung bei Ein-Text-Rubriken
+- [x] Nummerierte Rubriken auf eigener Seite
+- [x] **Schema v2 (Reader-Modell):** Vorwissen, Einleitung, Haupttext-Blöcke
+      (text/quelle/figur/tabelle), Verständnisfragen, Aufgaben mit AFB I–III,
+      Glossar, Bibliografie
+- [x] Abbildungen/Tabellen mit eigener Zählung + Bild-/Tabellenverzeichnis
+- [x] Lösungs-Anhang via `--solutions` (frei mit teacher/student kombinierbar)
+- [x] Gebündelte Fonts (Newsreader/Spectral/Libre Franklin, OFL)
+- [x] Typografie: Mediävalziffern im Fließtext, Versalziffern in Tabellen,
+      serifenlose AFB-Aufgabenboxen
 
 ## 6. Roadmap
 
 **Phase 2**
+- [ ] Ingestion `ingest.py`: `sources/` (PDF/DOCX/HTML) → Markdown (Pandoc/Docling)
 - [ ] Pandoc-Export (Markdown/HTML → DOCX, EPUB) als `export.py`
-- [ ] Lösungsteil separat (Schülerversion strikt ohne Lösungen)
-- [ ] Arbeitsblätter im Inhaltsverzeichnis
+- [ ] Modulare Mehrschritt-Generierung mit `kontext.json` (Steuerungsinstanz)
 
 **Phase 3**
-- [ ] Vorlagen-Bibliothek (mehrere Themes/Fächer)
-- [ ] QR-Codes zu Quellen/Videos
-- [ ] Optionaler Fakten-Check-Assistent (LLM schlägt zu prüfende Aussagen vor)
+- [ ] Slides aus derselben `editorial.json` (Typst `touying`)
+- [ ] Latein-Vokabelabgleich (Anbindung an Projekt „verte")
+- [ ] Optionaler Fakten-Check-Assistent (LLM markiert zu prüfende Aussagen)
 
 ## 7. Risiken
 
 | Risiko | Umgang |
 |---|---|
-| Sachliche Fehler im LLM-Text | menschliche Prüfung Pflicht; README-Hinweis |
-| Erfundene Effektstärken/Studien | `verified`-Flags + ⚠-Kennzeichnung im PDF |
-| Urheberrecht der Quellen | `license`/`sources`-Felder; eigene/geklärte Texte |
-| Typst-/Font-Installation | Fallback-Fonts; klare Fehlermeldungen in build.py |
+| Sachliche Fehler im LLM-Text | Grounding auf `sources/`; menschliche Prüfung Pflicht |
+| Erfundene Effektstärken/Studien | `geprueft`-Flags + ⚠-Kennzeichnung im PDF |
+| Layout-Sprengung durch lange Texte | einspaltiger Reader, breakable-Blöcke, Prüf-Loop |
+| Typst-/Font-Installation | Fonts gebündelt (`--font-path`), klare Fehlermeldungen |

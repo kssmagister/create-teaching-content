@@ -10,9 +10,13 @@ Dokument. Diese Trennung („File Contract") macht Ergebnisse reproduzierbar und
 per Git versionierbar.
 
 ```
-Clippings (.md)  ──►  [LLM: editorial.json]  ──►  build.py  ──►  Typst  ──►  PDF
-                       (Struktur/Didaktik)        (deterministisch)
+sources/ (Rohmaterial)  ──►  [LLM: editorial.json]  ──►  build.py  ──►  Typst  ──►  PDF
+                              (Struktur/Didaktik)         (deterministisch)
 ```
+
+Das LLM verarbeitet das **Rohmaterial** in `sources/` und schreibt daraus die
+strukturierte `editorial.json` (v2, Reader-Modell). `sources/` wird **nicht**
+direkt gerendert – es ist der Input für den Editorial-Schritt.
 
 ---
 
@@ -21,13 +25,15 @@ Clippings (.md)  ──►  [LLM: editorial.json]  ──►  build.py  ──�
 Es gibt **keinen** vollautomatischen Knopfdruck – über ein Web-Abo lässt sich
 ein LLM nicht programmatisch aufrufen. Der Ablauf ist bewusst schlank:
 
-1. **Quellen sammeln** → Markdown-Dateien nach `units/<unit>/clippings/` legen
-   (mit Front-Matter, siehe unten).
+1. **Material sammeln** → Quelltexte nach `units/<unit>/sources/` legen
+   (Markdown/Text; PDFs/DOCX vorab z. B. mit Docling/Pandoc zu Markdown wandeln).
 2. **Editorial-Schritt** → Prompt aus [`prompts/editorial.md`](prompts/editorial.md)
-   + Clippings in ein LLM geben, Ausgabe als `units/<unit>/editorial.json` speichern.
-3. **Bauen** → `python build.py units/<unit>`.
-4. **Prüfen** → PDF gegenlesen (Fakten! Urheberrecht!), ggf. `editorial.json` anpassen, neu bauen.
-5. **Versionieren** → `git add` + `git commit` (Snapshot der Einheit).
+   + Material in ein LLM geben, Ausgabe als `units/<unit>/editorial.json` speichern.
+3. **Bilder** → allfällige Abbildungen nach `units/<unit>/images/` legen (im JSON
+   nur mit Dateinamen referenziert).
+4. **Bauen** → `python build.py units/<unit>`.
+5. **Prüfen** → PDF gegenlesen (Fakten!), ggf. `editorial.json` anpassen, neu bauen.
+6. **Versionieren** → `git add` + `git commit` (Snapshot der Einheit).
 
 ---
 
@@ -57,20 +63,22 @@ würde Typst auf Georgia / New Computer Modern zurückfallen.)
 ## Nutzung
 
 ```powershell
-# Lehrerversion (Standard: mit Lehrerhinweisen, Evidenz-Box, Differenzierung)
+# Lehrerversion (mit Lehrerhinweisen + Evidenz-Box)
 python build.py units/001-schweiz-2wk
 
-# Schülerversion (ohne Lehrerteil/Lösungen)
+# Schülerversion (ohne Lehrerteil)
 python build.py units/001-schweiz-2wk --variant student
 
-# PDF danach öffnen
-python build.py units/001-schweiz-2wk --open
+# Lösungs-Anhang einfügen (unabhängig von teacher/student kombinierbar)
+python build.py units/001-schweiz-2wk --solutions
 
-# Nur die .typ-Datei erzeugen (kein Typst nötig) – zum Inspizieren/Debuggen
+# PDF danach öffnen  /  nur .typ erzeugen (kein Typst nötig)
+python build.py units/001-schweiz-2wk --open
 python build.py units/001-schweiz-2wk --no-compile
 ```
 
 Ausgaben landen in `units/<unit>/out/` (per `.gitignore` ausgeschlossen).
+Der Dateiname kodiert die Variante, z. B. `…-teacher-loesung.pdf`.
 
 ---
 
@@ -78,42 +86,35 @@ Ausgaben landen in `units/<unit>/out/` (per `.gitignore` ausgeschlossen).
 
 ```
 units/001-schweiz-2wk/
-├── editorial.json        ← vom LLM erzeugt, gegen schema/editorial.schema.json validiert
-├── cover.svg             ← optionales Cover-Bild (Feld "cover_image"), ersetzbar
-├── clippings/            ← Quelltexte als Markdown mit Front-Matter
-│   ├── 01-schweiz-1939.md
-│   └── ...
+├── editorial.json        ← vom LLM erzeugt (Schema v2), gegen schema/ validiert
+├── cover.svg             ← optionales Cover-Bild (meta.cover_bild), ersetzbar
+├── sources/              ← Rohmaterial (LLM-Input, wird NICHT gerendert)
+├── images/               ← Abbildungen (im JSON per Dateiname referenziert)
 └── out/                  ← generiert (main-*.typ, *.pdf)
 ```
 
-**Aufbau des erzeugten Hefts:** Cover (optional mit Bild) → Überblick
-(Lernziele + automatisches **Inhaltsverzeichnis** mit Seitenzahlen, in beiden
-Versionen) → [Lehrerhinweise, nur Lehrerversion] → nummerierte Rubriken →
-Arbeitsblätter → Quellen. Enthält eine Rubrik nur *einen* Text, dient der
-Rubriktitel zugleich als Titel (kein doppelter Kopf).
+**Aufbau des erzeugten Hefts (Reader-Modell):** Cover → Überblick (Lernziele +
+automatisches **Inhaltsverzeichnis**, in beiden Versionen) → [Lehrerhinweise,
+nur Lehrerversion] → **Vorwissen → Einleitung → Haupttext** (Text, Quellen­kästen,
+Abbildungen, Tabellen) → **Verständnisfragen → Aufgaben** (AFB I–III) →
+**Glossar** → [Lösungen, nur mit `--solutions`] → **Bibliografie + Bild-/
+Tabellenverzeichnis**. Rubriken sind nummeriert und beginnen auf neuer Seite.
 
-**Cover-Bild:** Feld `cover_image` in `editorial.json` = Dateiname relativ zum
-Unit-Ordner (PNG/JPG/**SVG**). Fehlt es, nutzt das Cover ein rein
-typografisches Layout. Das mitgelieferte `cover.svg` ist ein abstrakter
-Platzhalter – für den Druck durch ein eigenes/generiertes Motiv ersetzen (siehe
-[`prompts/cover.md`](prompts/cover.md)).
+**Inhaltsblöcke** definierst du in `editorial.json` (siehe
+[`schema/editorial.schema.json`](schema/editorial.schema.json) und
+[`prompts/editorial.md`](prompts/editorial.md)). `haupttext` ist eine geordnete
+Liste von Blöcken der Typen `text`, `quelle`, `figur`, `tabelle`.
 
-**Clipping-Front-Matter** (die `id` verknüpft mit `editorial.json`):
+**Cover-Bild:** `meta.cover_bild` = Dateiname relativ zum Unit-Ordner
+(PNG/JPG/**SVG**). Fehlt es, nutzt das Cover ein rein typografisches Layout.
 
-```markdown
----
-id: schweiz-1939
-title: "Die Schweiz 1939 – Zwischen den Fronten"
-source: "Quelle/Autor"
-url: "https://..."
-license: "Lizenz/Status – vor Verteilung klären"
----
-Markdown-Text …
-```
+**Markdown in Textfeldern:** Überschriften (`## …`), Absätze, Listen, Zitate,
+`**fett**`, `*kursiv*`, `` `Code` ``, `[Links](url)` werden nach Typst
+konvertiert (inkl. korrektem Escaping – kein Sanitizer nötig).
 
-Unterstütztes Markdown: Überschriften, Absätze, Listen, Zitate, `**fett**`,
-`*kursiv*`, `` `Code` ``, `[Links](url)`. Eine Zeile aus nur `___` erzeugt eine
-Schreiblinie (praktisch in Arbeitsblättern).
+**Typografie:** Fließtext in Spectral mit **Mediävalziffern** (`onum`),
+Tabellen mit Versalziffern, Aufgaben serifenlos (Libre Franklin) in farbiger
+AFB-Box – gemäß gängigen Empfehlungen für Unterrichtsmaterial.
 
 ---
 
@@ -123,17 +124,17 @@ Dieses Werkzeug erzeugt *Layout und Struktur*. Es ersetzt **keine**
 fachliche/didaktische Prüfung:
 
 - **Kein Fakten-Check.** LLM-Texte können sachlich falsch sein. Bei
-  Sachfächern (Geschichte, Bio, …) **immer gegenlesen**.
-- **Evidenzbasis ist Vorsicht geboten.** LLMs erfinden Effektstärken und
-  Studien. Im Schema gibt es `verified`-Flags; nur als ✓ verifiziert markierte
-  Angaben werden ohne Warnhinweis gedruckt, unmarkierte erscheinen mit ⚠.
-  Hattie-Effektstärken sind zudem methodisch umstritten – nicht als Gütesiegel
-  missbrauchen.
-- **Urheberrecht.** Fremde Web-Artikel als Klassensatz zu vervielfältigen ist
-  rechtlich heikel (auch der schulische Eigengebrauch hat Grenzen). Für eigene
-  Verteilung entweder eigene Texte, lizenzfreie/geklärte Quellen oder korrekt
-  belegte, zulässige Zitate verwenden. Die `sources`/`license`-Felder helfen
-  bei der Dokumentation.
+  Sachfächern (Geschichte, Latein, Bio, …) **immer gegenlesen**. Der
+  Editorial-Prompt erzwingt zwar Grounding auf `sources/`, garantiert aber keine
+  Korrektheit.
+- **Evidenzbasis mit Vorsicht.** LLMs erfinden Effektstärken/Studien. Im Schema
+  gibt es `geprueft`-Flags; nur als ✓ markierte Angaben werden ohne Warnhinweis
+  gedruckt, unmarkierte erscheinen mit ⚠. Hattie-Effektstärken sind zudem
+  methodisch umstritten – nicht als Gütesiegel missbrauchen.
+- **Urheberrecht.** Als Lehrperson an einer kantonalen Schule bist du über die
+  Gesamtverträge für den Unterrichtsgebrauch abgesichert. Die `bibliografie`
+  und die Quellenangaben bei Abbildungen dienen der korrekten Attribution; sie
+  decken *deinen Klasseneinsatz*, nicht zwingend eine Weitergabe darüber hinaus.
 
 ---
 

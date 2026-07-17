@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 150" font-family="Libre Franklin">
+  <line x1="60" y1="95" x2="700" y2="95" stroke="#2c5282" stroke-width="2"/>
+  <!-- 1939 -->
+  <circle cx="80" cy="95" r="6" fill="#2c5282"/>
+  <text x="80" y="122" font-size="15" font-weight="bold" fill="#1f2933" text-anchor="middle">1939</text>
+  <text x="80" y="70" font-size="12" fill="#5b6b7a" text-anchor="middle">Mobilmachung</text>
+  <!-- 1940 -->
+  <circle cx="287" cy="95" r="6" fill="#2c5282"/>
+  <text x="287" y="122" font-size="15" font-weight="bold" fill="#1f2933" text-anchor="middle">1940</text>
+  <text x="287" y="70" font-size="12" fill="#5b6b7a" text-anchor="middle">Réduit-Strategie</text>
+  <!-- 1942 -->
+  <circle cx="493" cy="95" r="6" fill="#2c5282"/>
+  <text x="493" y="122" font-size="15" font-weight="bold" fill="#1f2933" text-anchor="middle">1942</text>
+  <text x="493" y="70" font-size="12" fill="#5b6b7a" text-anchor="middle">Grenzschließung</text>
+  <!-- 1945 -->
+  <circle cx="700" cy="95" r="6" fill="#2c5282"/>
+  <text x="700" y="122" font-size="15" font-weight="bold" fill="#1f2933" text-anchor="middle">1945</text>
+  <text x="700" y="70" font-size="12" fill="#5b6b7a" text-anchor="middle">Kriegsende</text>
+</svg>

@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
-"""build.py -- baut aus einer Unit (editorial.json + clippings/) ein PDF.
+"""build.py -- baut aus einer Unit (editorial.json v2) ein PDF (Reader-Modell).
 
 Ablauf:
-  1. editorial.json laden und gegen das Schema validieren
-  2. Clippings laden (Markdown + Front-Matter)
-  3. Typst-Quelle erzeugen (EIN durchpaginiertes Dokument)
-  4. mit dem 'typst'-CLI zu PDF kompilieren
+  1. editorial.json laden + gegen schema/editorial.schema.json validieren
+  2. Bilder (Cover + Figuren) nach out/ kopieren
+  3. Typst-Quelle erzeugen (ein durchpaginiertes Dokument)
+  4. mit 'typst' zu PDF kompilieren
 
 Nutzung:
   python build.py units/001-schweiz-2wk
   python build.py units/001-schweiz-2wk --variant student
-  python build.py units/001-schweiz-2wk --variant teacher --open
-  python build.py units/001-schweiz-2wk --no-compile     (nur .typ erzeugen)
+  python build.py units/001-schweiz-2wk --solutions          # Loesungs-Anhang
+  python build.py units/001-schweiz-2wk --variant teacher --solutions --open
+  python build.py units/001-schweiz-2wk --no-compile          # nur .typ
 """
 import argparse
 import json
@@ -23,244 +24,263 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from src.clippings import load_all
 from src.markup import md_to_typst, tstr, inline
-from src.validate import validate
+
+try:
+    from src.validate import validate
+except Exception:  # validate optional
+    validate = None
 
 SCHEMA = ROOT / "schema" / "editorial.schema.json"
 THEME = ROOT / "templates" / "theme.typ"
 
 
-def opt(value):
-    """Typst-Argument: String-Literal oder 'none'."""
-    return tstr(value) if value else "none"
+def tstr_num(v):
+    return tstr(str(v))
 
 
-def objectives_body(lo: dict) -> list:
-    """Baut das Typst-Markup fuer die Lernziel-Box (in beiden Varianten genutzt)."""
+def tarr(strings):
+    return "(" + "".join(tstr(s) + ", " for s in strings) + ")"
+
+
+def tdict(d, keys):
+    parts = []
+    for k in keys:
+        if k in d and d[k] not in (None, ""):
+            parts.append(f"{k}: {tstr(str(d[k]))}")
+    return "(" + ", ".join(parts) + ")"
+
+
+def objectives_body(lo):
     out = ["*Kognitive Lernziele* \\"]
-    for o in lo["cognitive"]:
+    for o in lo["kognitiv"]:
         out.append("- " + inline(o))
-    if lo.get("skills"):
-        out.append("")
-        out.append("*Fähigkeiten* \\")
-        for o in lo["skills"]:
-            out.append("- " + inline(o))
-    if lo.get("metacognitive"):
-        out.append("")
-        out.append("*Metakognition / Reflexion* \\")
-        for o in lo["metacognitive"]:
-            out.append("- " + inline(o))
+    if lo.get("fertigkeiten"):
+        out += ["", "*Fähigkeiten* \\"] + ["- " + inline(o) for o in lo["fertigkeiten"]]
+    if lo.get("metakognitiv"):
+        out += ["", "*Metakognition / Reflexion* \\"] + ["- " + inline(o) for o in lo["metakognitiv"]]
     return out
 
 
-def build_typst(data: dict, clips: dict, variant: str, cover_image=None) -> str:
-    """Erzeugt die vollstaendige Typst-Quelle als String."""
+def build_typst(data, variant, solutions, figures):
+    """figures: dict {bildname -> relativer Pfad in out/ oder None wenn fehlt}."""
     teacher = variant == "teacher"
+    meta = data["meta"]
     L = ['#import "theme.typ": *', ""]
+    L.append(f'#show: doc => conf(titel: {tstr(meta["titel"])}, variant: {tstr(variant)}, doc)')
+    L.append("")
+
+    # --- Cover ---
+    cimg = figures.get("__cover__")
+    img_arg = f", bild: {tstr(cimg)}" if cimg else ""
     L.append(
-        f'#show: doc => conf(unit-title: {tstr(data["unit_title"])}, '
-        f"variant: {tstr(variant)}, doc)"
+        f'#cover(titel: {tstr(meta["titel"])}, fach: {tstr(meta.get("fach", ""))}, '
+        f'stufe: {tstr(meta.get("stufe", ""))}, dauer: {tstr(meta.get("dauer", ""))}, '
+        f'zeilen: {tarr(meta.get("cover_zeilen", []))}, variant: {tstr(variant)}{img_arg})'
     )
     L.append("")
 
-    # --- Cover (optional mit Bild) ---
-    lines = data.get("cover_lines", [])
-    arr = "(" + "".join(tstr(x) + ", " for x in lines) + ")"
-    img_arg = f", image-path: {tstr(cover_image)}" if cover_image else ""
-    L.append(
-        f'#cover(unit-title: {tstr(data["unit_title"])}, '
-        f'subject: {tstr(data.get("subject", ""))}, '
-        f'grade: {tstr(data.get("grade_level", ""))}, '
-        f'duration: {tstr(data.get("duration", ""))}, '
-        f"lines: {arr}, variant: {tstr(variant)}{img_arg})"
-    )
-    L.append("")
+    # --- Ueberblick: Lernziele + Inhalt ---
+    L.append("#overview[")
+    L += objectives_body(data["lernziele"])
+    L += ["]", ""]
 
-    # --- Ueberblick: Lernziele + Inhaltsverzeichnis (beide Varianten) ---
-    L.append(f"#overview(variant: {tstr(variant)})[")
-    L.extend(objectives_body(data["learning_objectives"]))
-    L.append("]")
-    L.append("")
-
-    # --- Lehrerteil (nur in der Lehrerversion) ---
-    if teacher:
+    # --- Lehrerteil (nur teacher) ---
+    if teacher and (data.get("lehrerhinweis") or data.get("evidenzbasis")):
         L.append("#pagebreak()")
         L.append('#heading(level: 2, outlined: false, numbering: none)[Lehrerhinweise]')
         L.append("")
-
-        # Didaktische Begruendung (editor_note)
-        note = data["editor_note"]
-        L.append("#teacher-box[")
-        L.append(md_to_typst(note["content"]))
-        if note.get("key_takeaways"):
-            L.append("")
-            L.append("*Kernpunkte* \\")
-            for k in note["key_takeaways"]:
-                L.append("- " + inline(k))
-        L.append("]")
-        L.append("")
-
-        # Evidenzbasis -- bewusst mit Pruef-Warnung (siehe README)
-        eb = data.get("evidence_base")
-        if eb and eb.get("key_research"):
-            unverified = [r for r in eb["key_research"] if not r.get("verified")]
-            body = ["#warn-box(title: \"Evidenzbasis - vor Gebrauch prüfen\")["]
-            body.append(
-                "Effektstärken und Studien wurden ggf. vom LLM erzeugt. "
-                "Nur als _verifiziert_ markierte Angaben sind gegengeprüft. \\"
-            )
-            for r in eb["key_research"]:
-                mark = "✓ " if r.get("verified") else "⚠ "
-                es = r.get("effect_size")
+        lh = data.get("lehrerhinweis")
+        if lh:
+            L.append("#teacher-box[")
+            L.append(md_to_typst(lh["text"]))
+            if lh.get("kernpunkte"):
+                L += ["", "*Kernpunkte* \\"] + ["- " + inline(k) for k in lh["kernpunkte"]]
+            L += ["]", ""]
+        eb = data.get("evidenzbasis")
+        if eb and eb.get("studien"):
+            L.append('#warn-box(title: "Evidenzbasis - vor Gebrauch prüfen")[')
+            L.append("Effektstärken und Studien können vom LLM stammen. Nur ✓-markierte Angaben sind geprüft. \\")
+            for r in eb["studien"]:
+                mark = "✓ " if r.get("geprueft") else "⚠ "
+                es = r.get("effektstaerke")
                 es_txt = f" (d = {es})" if es not in (None, "", "-") else ""
-                body.append(
-                    "- " + mark + "*" + inline(r["principle"]) + "*"
-                    + inline(es_txt) + " — " + inline(r["study"])
-                )
-                if r.get("application"):
-                    body.append("  " + inline(r["application"]))
-            body.append("]")
-            L.extend(body)
-            L.append("")
-            _ = unverified  # nur zur Klarheit; Markierung erfolgt inline
+                L.append("- " + mark + "*" + inline(r["prinzip"]) + "*" + inline(es_txt) + " — " + inline(r["studie"]))
+                if r.get("anwendung"):
+                    L.append("  " + inline(r["anwendung"]))
+            L += ["]", ""]
 
-        # Empfohlene Reihenfolge
-        order = data.get("recommended_order")
-        if order:
-            L.append('#heading(level: 3, outlined: false, numbering: none)[Empfohlene Reihenfolge]')
-            for cid in order:
-                title = clips.get(cid, {}).get("title", cid)
-                L.append(f"+ {inline(title)}")
-            L.append("")
+    # --- Vorwissen ---
+    if data.get("vorwissen"):
+        L.append("#rubrik[Vorwissen]")
+        L.append("#prior-box[")
+        L.append(md_to_typst(data["vorwissen"]["text"]))
+        L += ["]", ""]
 
-    # --- Rubriken mit Artikeln ---
-    # Bei genau einem Text pro Rubrik entfaellt der doppelte Artikel-Titel:
-    # die Rubrik-Ueberschrift dient dann zugleich als Titel.
-    used = set()
-    for sec in data["sections"]:
-        purpose = opt(sec.get("purpose", "")) if teacher else "none"
-        L.append(f"#section-divider({tstr(sec['section_title'])}, purpose: {purpose})")
-        L.append("")
-        clip_ids = sec.get("clippings", [])
-        single = len(clip_ids) == 1
-        for cid in clip_ids:
-            used.add(cid)
-            clip = clips.get(cid)
-            if clip is None:
-                L.append(
-                    f"#warn-box[Fehlende Clipping-Datei: `{cid}` — "
-                    "keine passende .md in clippings/ gefunden.]"
-                )
-                L.append("")
-                continue
-            source = clip.get("source") or clip.get("url") or ""
-            title_arg = "none" if single else tstr(clip["title"])
-            L.append(f"#article(title: {title_arg}, source: {opt(source)})[")
-            L.append(md_to_typst(clip["_body"]))
-            L.append("]")
-            L.append("")
-
-    # --- Arbeitsblaetter ---
-    for ws in data.get("worksheets", []):
-        diff = ws.get("differentiation", {})
-        L.append("#worksheet(")
-        L.append(f"  title: {tstr(ws['title'])},")
-        L.append(f"  task: {tstr(ws['task'])},")
-        L.append(f"  support: {opt(diff.get('support', ''))},")
-        L.append(f"  extension: {opt(diff.get('extension', ''))},")
-        L.append(f"  variant: {tstr(variant)},")
-        if ws.get("body"):
-            L.append("  body: [")
-            L.append(md_to_typst(ws["body"]))
-            L.append("  ],")
-        L.append(")")
+    # --- Einleitung ---
+    if data.get("einleitung"):
+        L.append("#rubrik[Einleitung]")
+        L.append(md_to_typst(data["einleitung"]["text"]))
         L.append("")
 
-    # --- Kolophon ---
-    sources = data.get("sources", [])
-    keywords = data.get("keywords", [])
-    s_arr = "(" + "".join(tstr(x) + ", " for x in sources) + ")"
-    k_arr = "(" + "".join(tstr(x) + ", " for x in keywords) + ")"
-    L.append(f"#colophon(sources: {s_arr}, keywords: {k_arr})")
+    # --- Haupttext (Bloecke) ---
+    L.append("#rubrik[Haupttext]")
     L.append("")
+    for blk in data["haupttext"]:
+        typ = blk["typ"]
+        if typ == "text":
+            L.append(md_to_typst(blk["text"]))
+            L.append("")
+        elif typ == "quelle":
+            args = []
+            if blk.get("autor"):
+                args.append(f'autor: {tstr(blk["autor"])}')
+            if blk.get("titel"):
+                args.append(f'titel: {tstr(blk["titel"])}')
+            head = "#quelle(" + ", ".join(args) + (", " if args else "") + ")["
+            L.append(head if args else "#quelle[")
+            L.append(md_to_typst(blk["text"]))
+            L += ["]", ""]
+        elif typ == "figur":
+            rel = figures.get(blk["bild"])
+            if rel is None:
+                L += [f"#warn-box[Fehlendes Bild: `{blk['bild']}` (nicht in images/).]", ""]
+                continue
+            q = f', quelle: {tstr(blk["quelle"])}' if blk.get("quelle") else ""
+            b = f', breite: {blk["breite"]}' if blk.get("breite") else ""
+            L.append(f'#abbildung({tstr(rel)}, beschriftung: {tstr(blk.get("beschriftung",""))}{q}{b})')
+            L.append("")
+        elif typ == "tabelle":
+            kopf = tarr(blk["kopf"])
+            zeilen = "(" + "".join("(" + "".join(tstr(c) + ", " for c in row) + "), " for row in blk["zeilen"]) + ")"
+            bsc = f', beschriftung: {tstr(blk["beschriftung"])}' if blk.get("beschriftung") else ""
+            L.append(f"#tabelle(kopf: {kopf}, zeilen: {zeilen}{bsc})")
+            L.append("")
 
-    # Hinweis auf nicht referenzierte Clippings (nur Konsole, s.u.)
-    build_typst.unused = [cid for cid in clips if cid not in used]
+    # --- Verstaendnisfragen ---
+    if data.get("verstaendnisfragen"):
+        L.append("#rubrik[Verständnisfragen]")
+        L.append("#callout(title: \"Verständnisfragen\", fill: teach-soft, bar: teach)[")
+        L.append("#set enum(numbering: \"1.\")")
+        for f in data["verstaendnisfragen"]:
+            L.append("+ " + inline(f))
+        L += ["]", ""]
+
+    # --- Aufgaben ---
+    aufgaben = data.get("aufgaben", [])
+    if aufgaben:
+        L.append("#rubrik[Aufgaben]")
+        L.append("")
+        for i, a in enumerate(aufgaben, 1):
+            L.append(f'#aufgabe({i}, {a["afb"]})[')
+            L.append(md_to_typst(a["text"]))
+            L += ["]", ""]
+
+    # --- Glossar ---
+    if data.get("glossar"):
+        arr = "(" + "".join(tdict(e, ["begriff", "definition"]) + ", " for e in data["glossar"]) + ")"
+        L.append("#rubrik[Glossar]")
+        L.append(f"#glossar({arr})")
+        L.append("")
+
+    # --- Loesungen (nur mit --solutions) ---
+    if solutions:
+        loes = [(i, a) for i, a in enumerate(aufgaben, 1) if a.get("loesung")]
+        if loes:
+            L.append("#rubrik[Lösungen]")
+            L.append("#set enum(numbering: \"1.\")")
+            for i, a in loes:
+                L.append(f"{i}. " + inline(a["loesung"]))
+            L.append("")
+
+    # --- Apparat: Bibliografie + Verzeichnisse ---
+    if data.get("bibliografie"):
+        arr = "(" + "".join(tdict(e, ["autor", "titel", "jahr", "ort", "verlag", "url"]) + ", " for e in data["bibliografie"]) + ")"
+        L.append("#pagebreak(weak: true)")
+        L.append('#apparat-heading[Bibliografie]')
+        L.append(f"#bibliografie({arr})")
+        L.append("")
+    L.append("#bildverzeichnis()")
+    L.append("#tabellenverzeichnis()")
+    L.append("")
     return "\n".join(L)
+
+
+def copy_images(unit, data, out_dir):
+    """Kopiert Cover- und Figur-Bilder nach out/. Gibt {name -> rel. Pfad|None}."""
+    figures = {}
+    img_dir = out_dir / "img"
+    # Cover
+    cb = data["meta"].get("cover_bild")
+    if cb:
+        src = unit / cb
+        if src.exists():
+            dst = "cover" + src.suffix
+            shutil.copyfile(src, out_dir / dst)
+            figures["__cover__"] = dst
+        else:
+            print(f"  [Warnung] cover_bild '{cb}' nicht gefunden.")
+    # Figuren
+    fig_names = [b["bild"] for b in data.get("haupttext", []) if b.get("typ") == "figur"]
+    if fig_names:
+        img_dir.mkdir(exist_ok=True)
+    for name in fig_names:
+        src = unit / "images" / name
+        if src.exists():
+            shutil.copyfile(src, img_dir / name)
+            figures[name] = f"img/{name}"
+        else:
+            figures[name] = None
+            print(f"  [Warnung] Bild '{name}' nicht in images/ gefunden.")
+    return figures
 
 
 def main():
     ap = argparse.ArgumentParser(description="Baut eine Unterrichtseinheit zu PDF.")
-    ap.add_argument("unit", help="Pfad zum Unit-Ordner (enthaelt editorial.json)")
+    ap.add_argument("unit")
     ap.add_argument("--variant", choices=["teacher", "student"], default="teacher")
-    ap.add_argument("--open", action="store_true", help="PDF nach dem Build oeffnen")
-    ap.add_argument("--no-compile", action="store_true", help="nur .typ erzeugen")
+    ap.add_argument("--solutions", action="store_true", help="Loesungs-Anhang einfuegen")
+    ap.add_argument("--open", action="store_true")
+    ap.add_argument("--no-compile", action="store_true")
     args = ap.parse_args()
 
     unit = Path(args.unit).resolve()
     ed_path = unit / "editorial.json"
     if not ed_path.exists():
         sys.exit(f"FEHLER: {ed_path} nicht gefunden.")
-
     data = json.loads(ed_path.read_text(encoding="utf-8"))
 
-    # 1. Validierung
-    errors, warnings = validate(data, SCHEMA)
-    for w in warnings:
-        print(f"  [Warnung] {w}")
-    if errors:
-        print("FEHLER: editorial.json entspricht nicht dem Schema:")
-        for e in errors:
-            print(f"  - {e}")
-        sys.exit(1)
+    if validate is not None:
+        errors, warnings = validate(data, SCHEMA)
+        for w in warnings:
+            print(f"  [Warnung] {w}")
+        if errors:
+            print("FEHLER: editorial.json entspricht nicht dem Schema:")
+            for e in errors:
+                print(f"  - {e}")
+            sys.exit(1)
 
-    # 2. Clippings
-    clips = load_all(unit / "clippings")
-    print(f"  {len(clips)} Clipping(s) geladen.")
-
-    # 3. Typst erzeugen
     out_dir = unit / "out"
     out_dir.mkdir(exist_ok=True)
     shutil.copyfile(THEME, out_dir / "theme.typ")
+    figures = copy_images(unit, data, out_dir)
 
-    # Cover-Bild (optional): relativ zum Unit-Ordner, wird nach out/ kopiert.
-    cover_image = None
-    ci = data.get("cover_image")
-    if ci:
-        src = unit / ci
-        if src.exists():
-            cover_image = "cover" + src.suffix
-            shutil.copyfile(src, out_dir / cover_image)
-        else:
-            print(f"  [Warnung] cover_image '{ci}' nicht gefunden – wird ignoriert.")
-
-    typ = build_typst(data, clips, args.variant, cover_image=cover_image)
-    main_typ = out_dir / f"main-{args.variant}.typ"
+    typ = build_typst(data, args.variant, args.solutions, figures)
+    suffix = args.variant + ("-loesung" if args.solutions else "")
+    main_typ = out_dir / f"main-{suffix}.typ"
     main_typ.write_text(typ, encoding="utf-8")
     print(f"  Typst geschrieben: {main_typ}")
-
-    for cid in getattr(build_typst, "unused", []):
-        print(f"  [Hinweis] Clipping '{cid}' ist in keiner Sektion referenziert.")
 
     if args.no_compile:
         print("  --no-compile gesetzt: kein PDF erzeugt.")
         return
 
-    # 4. Kompilieren
     if shutil.which("typst") is None:
-        print(
-            "\nFEHLER: 'typst' nicht gefunden.\n"
-            "Installieren (Windows):  winget install --id Typst.Typst\n"
-            "  oder:                  cargo install typst-cli\n"
-            "Danach erneut ausfuehren, oder mit --no-compile nur die .typ erzeugen."
-        )
+        print("\nFEHLER: 'typst' nicht gefunden. Installieren: winget install --id Typst.Typst")
         sys.exit(2)
 
-    pdf = out_dir / f"{unit.name}-{args.variant}.pdf"
-    cmd = ["typst", "compile", "--font-path", str(ROOT / "assets" / "fonts"),
-           str(main_typ), str(pdf)]
-    print("  " + " ".join(cmd))
+    pdf = out_dir / f"{unit.name}-{suffix}.pdf"
+    cmd = ["typst", "compile", "--font-path", str(ROOT / "assets" / "fonts"), str(main_typ), str(pdf)]
     res = subprocess.run(cmd)
     if res.returncode != 0:
         sys.exit(res.returncode)
@@ -269,7 +289,7 @@ def main():
     if args.open:
         try:
             import os
-            os.startfile(pdf)  # Windows
+            os.startfile(pdf)
         except AttributeError:
             subprocess.run(["xdg-open", str(pdf)])
 

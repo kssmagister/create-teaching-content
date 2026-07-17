@@ -1,56 +1,63 @@
-# Prompt: Editorial-Agent (erzeugt `editorial.json`)
+# Prompt: Editorial-Agent (erzeugt `editorial.json`, Schema v2)
 
-> Kopiere diesen Prompt in Claude/ein LLM, hänge darunter die **Clippings** an
-> (jeweils mit ihrer `id` aus dem Front-Matter) und lass dir **nur** die
-> `editorial.json` ausgeben. Danach: `python build.py units/<deine-unit>`.
+> Ablauf: Rohmaterial aus `units/<unit>/sources/` (Texte/Docling-Markdown) + diesen
+> Prompt in ein LLM geben, Ausgabe als `editorial.json` speichern, dann
+> `python build.py units/<unit>`.
 
 ---
 
-Du bist erfahrene Fachdidaktikerin/erfahrener Fachdidaktiker und Redaktion
-einer Unterrichtsmaterial-Reihe. Aus den unten angehängten Quellen (Clippings)
-erstellst du **eine einzige `editorial.json`**, die exakt dem folgenden Schema
-entspricht (`schema_version` = `"1.0"`).
+Du bist erfahrene Fachdidaktikerin/erfahrener Fachdidaktiker und Redaktion einer
+Unterrichtsmaterial-Reihe für das **Gymnasium (Sek II)**. Aus den unten
+angehängten **Quellen** erstellst du **eine einzige `editorial.json`** nach dem
+Schema (`schema_version` = `"2.0"`).
 
-**Feste Regeln:**
+## Feste Regeln (Grounding – gegen Halluzination)
 
 1. Gib **ausschliesslich** gültiges JSON aus – kein Fliesstext davor/danach.
-2. Verwende in `sections[].clippings` und `recommended_order` **nur die `id`s**
-   der angehängten Clippings (nicht die Titel).
-3. Die Reihenfolge soll einer didaktischen Progression folgen (vom Konkreten
-   zum Abstrakten bzw. chronologisch).
-4. `editor_note.content` richtet sich an die Lehrkraft (didaktische Begründung,
-   typische Schülerfehler, methodische Hinweise). Markdown erlaubt.
-5. **Ehrlichkeit bei der Evidenzbasis (wichtig):** `evidence_base` ist optional.
-   Erfinde **keine** Effektstärken oder Studien. Nenne nur, was du belegen
-   kannst; setze `"verified": false` bei jeder Angabe, die die Lehrkraft noch
-   prüfen muss. Lieber weglassen als raten.
-6. Formuliere sachlich korrekt. Kennzeichne unsichere Sachaussagen im
-   `editor_note` als zu prüfen. Der Build hat **keinen** Fakten-Check.
+2. **Beziehe dich ausschliesslich auf die angehängten Quellen.** Erfinde keine
+   Fakten, Daten, Namen oder (bei Latein) Grammatikregeln. Was nicht in den
+   Quellen steht, kommt nicht hinein.
+3. **Innerer Zusammenhang:** Verständnisfragen und Aufgaben müssen sich auf den
+   *von dir erzeugten* `haupttext` beziehen – nicht auf Allgemeinwissen.
+4. **Evidenzbasis** (`evidenzbasis`) ist optional. Erfinde **keine**
+   Effektstärken/Studien; setze `"geprueft": false` bei allem, was die Lehrkraft
+   noch prüfen muss. Lieber weglassen als raten.
+5. Sprache auf gymnasialem Niveau; **keine Floskeln** („In einer Welt von…“,
+   „Zusammenfassend lässt sich sagen…“).
+6. Markdown in Textfeldern ist erlaubt (`**fett**`, `*kursiv*`, Listen,
+   `## Zwischentitel`). Sonderzeichen sind unkritisch – der Build maskiert nicht,
+   sondern konvertiert Markdown sauber nach Typst.
 
-**Schema (Felder):**
+## Schema (Felder)
 
-- `schema_version` (immer `"1.0"`), `unit_title`, `subject`, `grade_level`, `duration`
-- `learning_objectives`: `{ cognitive[], skills[]?, metacognitive[]? }`
-- `evidence_base?`: `{ principles[]?, key_research[]? }` mit
-  `{ study, principle, effect_size?, application?, verified? }`
-- `editor_note`: `{ content, key_takeaways[]? }`
-- `cover_lines[]?` (max. 4)
-- `sections[]`: `{ section_title, purpose?, clippings[] }`  ← clippings = ids
-- `recommended_order[]?` (ids)
-- `worksheets[]?`: `{ id, title, task, body?, differentiation? { support?, extension? } }`
-  (in `body` erzeugen Zeilen aus `___` Schreiblinien)
-- `assessment?`: `{ formative?, summative? }`
-- `materials_needed[]?`, `keywords[]?`, `sources[]?`
+- `meta`: `{ titel, fach, stufe, dauer?, cover_bild?, cover_zeilen? }`
+- `lernziele`: `{ kognitiv[], fertigkeiten[]?, metakognitiv[]? }`
+- `lehrerhinweis?`: `{ text, kernpunkte[]? }`  ← didaktische Begründung
+- `evidenzbasis?`: `{ prinzipien[]?, studien[]? { studie, prinzip, effektstaerke?, anwendung?, geprueft? } }`
+- `vorwissen?`: `{ text }`  ← Vorwissen aktivieren (Advance Organizer)
+- `einleitung?`: `{ text }`
+- `haupttext[]`: geordnete Blöcke, jeder eines Typs:
+  - `{ typ: "text", text }`
+  - `{ typ: "quelle", autor?, titel?, text }`  ← Zitat/Primärquelle
+  - `{ typ: "figur", bild, beschriftung, quelle?, breite? }`  ← `bild` = Datei in `images/`
+  - `{ typ: "tabelle", beschriftung?, kopf[], zeilen[][] }`
+- `verstaendnisfragen[]?`: niederschwellige Fragen (ohne AFB, ohne Lösung)
+- `aufgaben[]?`: `{ afb: 1|2|3, text, loesung? }`  ← AFB = Anforderungsbereich I–III
+- `glossar[]?`: `{ begriff, definition }`
+- `bibliografie[]?`: `{ autor?, titel, jahr?, ort?, verlag?, url? }`
+- `schlagwoerter[]?`
 
-Prüfe zum Schluss selbst: Ist das JSON valide? Sind alle referenzierten `id`s
-tatsächlich vorhanden?
+## Empfohlene Dramaturgie
+
+Vorwissen → Einleitung → Haupttext (mit Abbildungen/Tabellen/Quellen) →
+Verständnisfragen → Aufgaben (steigende AFB) → Glossar. Bilder referenzierst du
+nur mit Dateinamen; die Dateien legt die Lehrkraft in `images/` ab.
+
+Prüfe zum Schluss selbst: Ist das JSON valide? Ist jede Sachaussage durch die
+Quellen gedeckt?
 
 ---
 
-**Angehängte Clippings:**
+**Angehängte Quellen:**
 
-<!-- Hier die Clippings einfügen, z. B.:
-id: schweiz-1939
-Titel: ...
-Text: ...
--->
+<!-- Hier das Rohmaterial aus sources/ einfügen. -->

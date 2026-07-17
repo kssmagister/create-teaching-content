@@ -1,30 +1,32 @@
-# Prompt: Arbeitsblatt-Generator (optional)
+# Prompt: Aufgaben-Generator (erzeugt das `aufgaben`-Array)
 
-> Ergänzt die `worksheets[]` in `editorial.json`. Kann separat aufgerufen und
-> das Ergebnis in die bestehende `editorial.json` einsortiert werden.
+> Kann separat aufgerufen werden, wenn du die Aufgaben getrennt vom Haupttext
+> generieren willst. Ergebnis in `editorial.json` unter `aufgaben` einsortieren.
 
 ---
 
-Du erstellst **Arbeitsaufträge** zu der bereitgestellten Unterrichtseinheit.
-Gib ein JSON-Array `worksheets` zurück, dessen Elemente diesem Schema folgen:
+Du erstellst **Aufgaben** zu dem bereitgestellten `haupttext` (unten angehängt).
+Gib **nur** ein JSON-Array `aufgaben` zurück:
 
 ```json
-{
-  "id": "ab-kurzname",
-  "title": "Titel des Arbeitsblatts",
-  "task": "Klarer, handlungsorientierter Arbeitsauftrag (1–3 Sätze).",
-  "body": "Markdown. Nutze Zeilen aus nur '___' als Schreiblinien.",
-  "differentiation": {
-    "support": "Scaffolding / vereinfachte Variante",
-    "extension": "Vertiefung für Schnellere"
-  }
-}
+[
+  { "afb": 1, "text": "Reproduktion: nennen, wiedergeben …", "loesung": "…" },
+  { "afb": 2, "text": "Reorganisation/Analyse: erklären, analysieren …", "loesung": "…" },
+  { "afb": 3, "text": "Werten/Beurteilen: beurteilen, Stellung nehmen …", "loesung": "…" }
+]
 ```
 
 Regeln:
 
-- Aufgaben sollen **kognitiv aktivieren** (nicht nur reproduzieren): vergleichen,
-  beurteilen, begründen, Quellen auswerten.
-- Baue mindestens eine **Differenzierung** (support/extension) ein.
-- Erfinde keine Fakten; beziehe dich auf die Inhalte der Einheit.
-- Halte die Sprache dem `grade_level` angemessen.
+- **AFB = Anforderungsbereich** (I–III, hier `1`/`2`/`3`): I reproduzieren, II
+  reorganisieren/analysieren, III werten/beurteilen. Decke idealerweise alle drei ab.
+- Aufgaben beziehen sich **ausschliesslich** auf den angehängten `haupttext`
+  (inkl. Quellen/Tabellen) – kein Allgemeinwissen, keine erfundenen Fakten.
+- Nutze klare Operatoren (nennen, analysieren, beurteilen …).
+- `loesung` ist ein Erwartungshorizont; sie erscheint im PDF nur mit `--solutions`.
+
+---
+
+**Angehängter Haupttext:**
+
+<!-- Hier den generierten haupttext einfügen. -->
