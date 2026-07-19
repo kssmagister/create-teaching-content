@@ -186,6 +186,7 @@
     columns: kopf.len(),
     stroke: (x, y) => (bottom: 0.5pt + line-grey),
     inset: (x: 0.7em, y: 0.5em),
+    align: left,
     ..head, ..body-rows,
   )
   if beschriftung != none { figure(t, kind: table, caption: beschriftung) } else { t }
