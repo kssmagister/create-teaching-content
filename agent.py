@@ -256,7 +256,7 @@ hergeben (z.B. Chronologien, Vergleiche)."""
         f"{bilder_hinweis}\n\nErzeuge den `haupttext` (geordnete Bloecke) auf Basis "
         "der folgenden Quellen:\n\n" + quellen
     )
-    return _call(client, system, user, SCHEMA_C, max_tokens=20000)
+    return _call(client, system, user, SCHEMA_C, max_tokens=32000)
 
 
 # ---- Stufe D: Verstaendnisfragen + Aufgaben -------------------------------
