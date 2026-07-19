@@ -93,6 +93,12 @@
       <span class="muted">Ueberschreibt editorial.json (Sicherung: editorial.json.bak). Ergebnis vor dem Bauen pruefen!</span>
     </div>
     <div id="genmsg"></div>
+    <div class="row" style="margin-bottom:8px">
+      <input type="file" id="up-haupttext" accept=".md,.markdown,text/markdown">
+      <button class="sm ghost" onclick="uploadHaupttext()">Haupttext aus Markdown ersetzen</button>
+      <span class="muted">Fuer bereits fertig gegliederten Text (eigene Ueberschriften). Ersetzt nur `haupttext`, Rest bleibt erhalten.</span>
+    </div>
+    <div id="htmsg"></div>
     <textarea id="editor" spellcheck="false"></textarea>
     <div class="row" style="margin-top:8px">
       <button onclick="saveEditorial()">Validieren &amp; speichern</button>
@@ -215,6 +221,24 @@ async function generateEditorial(){
     m.innerHTML=`<div class="msg err">Generierung fehlgeschlagen.</div><div class="log">${res.log||res.detail||''}</div>`;
   }
   btn.disabled=false; btn.textContent='Aus sources/ generieren (Claude)';
+}
+
+async function uploadHaupttext(){
+  const inp=document.getElementById('up-haupttext'); if(!inp.files.length) return;
+  const fd=new FormData(); fd.append('file', inp.files[0]);
+  const m=document.getElementById('htmsg');
+  const r=await fetch(`/api/units/${current}/haupttext`,{method:'POST',body:fd});
+  const res=await r.json();
+  if(res.ok){
+    m.className='msg ok';
+    m.textContent=`Haupttext ersetzt (${res.bloecke} Block${res.bloecke===1?'':'e'}). Bitte pruefen.`
+      + (res.warnings&&res.warnings.length?('\n'+res.warnings.join('\n')):'');
+    await loadEditorial();
+  } else {
+    m.className='msg err';
+    m.textContent='Fehler:\n- '+(res.errors||[res.detail||'Unbekannter Fehler']).join('\n- ');
+  }
+  inp.value='';
 }
 
 async function buildUnit(){

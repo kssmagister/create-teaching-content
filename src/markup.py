@@ -49,6 +49,23 @@ def inline(text: str) -> str:
     return "".join(out)
 
 
+def split_haupttext_md(md: str) -> list[str]:
+    """Teilt ein fertiges Markdown-Dokument an Top-Level-Ueberschriften (`# `) in
+    Abschnitte, die je zu einem `haupttext`-Textblock werden. Tiefere Ueberschriften
+    (`##` etc.) bleiben als Zwischentitel innerhalb eines Blocks erhalten."""
+    lines = md.replace("\r\n", "\n").split("\n")
+    sections, current = [], []
+    for line in lines:
+        if re.match(r"^#\s+\S", line) and current:
+            sections.append("\n".join(current).strip())
+            current = [line]
+        else:
+            current.append(line)
+    if current:
+        sections.append("\n".join(current).strip())
+    return [s for s in sections if s]
+
+
 def md_to_typst(md: str) -> str:
     """Wandelt einen Markdown-Block in Typst-Markup um."""
     lines = md.replace("\r\n", "\n").split("\n")

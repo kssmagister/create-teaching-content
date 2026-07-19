@@ -21,6 +21,7 @@ STATIC = Path(__file__).resolve().parent / "static"
 
 sys.path.insert(0, str(ROOT))
 from src.validate import validate  # noqa: E402
+from src.markup import split_haupttext_md  # noqa: E402
 
 app = FastAPI(title="create-teaching-content")
 
@@ -135,6 +136,34 @@ def put_editorial(unit: str, payload: dict = Body(...)):
         return {"ok": False, "errors": errors, "warnings": warnings}
     (d / "editorial.json").write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
     return {"ok": True, "warnings": warnings}
+
+
+# ---- Fertiger Haupttext (Markdown-Upload) -------------------------------
+@app.post("/api/units/{unit}/haupttext")
+async def upload_haupttext(unit: str, file: UploadFile):
+    """Ersetzt den `haupttext` in editorial.json durch ein bereits fertig
+    gegliedertes Markdown-Dokument (z. B. selbst verfasster Text statt
+    LLM-Generierung). Ueberschriften (#) werden zu Blockgrenzen, alle anderen
+    Teile (Lernziele, Vorwissen, ...) bleiben unangetastet."""
+    d = _unit_dir(unit)
+    raw = (await file.read()).decode("utf-8", errors="replace")
+    sections = split_haupttext_md(raw)
+    if not sections:
+        raise HTTPException(400, "Datei ist leer.")
+
+    ed_path = d / "editorial.json"
+    prev = ed_path.read_text(encoding="utf-8") if ed_path.exists() else None
+    data = json.loads(prev) if prev else dict(EDITORIAL_SKELETON)
+    data["haupttext"] = [{"typ": "text", "text": s} for s in sections]
+
+    errors, warnings = validate(data, SCHEMA)
+    if errors:
+        return {"ok": False, "errors": errors, "warnings": warnings}
+
+    if prev is not None:
+        (d / "editorial.json.bak").write_text(prev, encoding="utf-8")
+    ed_path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"ok": True, "bloecke": len(sections), "warnings": warnings}
 
 
 # ---- Datei-Upload ------------------------------------------------------
