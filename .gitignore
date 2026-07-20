@@ -2,6 +2,10 @@
 units/**/out/
 *.pdf
 
+# agent.py: transiente Generierungs-Zustaende
+units/**/kontext.json
+*.bak
+
 # Secrets -- NIEMALS committen (Claude-API-Key etc.)
 .env
 .env.*

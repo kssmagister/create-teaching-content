@@ -1,0 +1,414 @@
+{
+  "schema_version": "2.0",
+  "meta": {
+    "titel": "Die Eisenzeit – Vom neuen Metall zu den ersten Hochkulturen Mitteleuropas",
+    "fach": "Geschichte",
+    "stufe": "Gymnasium (Sek II)",
+    "dauer": "4-5 Lektionen",
+    "titelseite": {
+      "zeilen": [
+        "Salz, Eisen und die ersten Städte nördlich der Alpen",
+        "Von der Hallstatt-Kultur zu den keltischen Oppida",
+        "Wie Technologie und Handel Europa prägten (ca. 1200–15 v. Chr.)"
+      ]
+    }
+  },
+  "lernziele": {
+    "kognitiv": [
+      "Ich kann die Bedeutung der Eisenverarbeitung erklären und ihre Auswirkungen auf Landwirtschaft, Handwerk und Machtstrukturen darstellen.",
+      "Ich kann die soziale und politische Organisation eisenzeitlicher Gesellschaften (z.B. Siedlungsformen, Hierarchien, Fürstensitze) beschreiben.",
+      "Ich kann die Rolle der Kelten in der Eisenzeit charakterisieren und ihre Bedeutung für die europäische Kulturgeschichte einordnen.",
+      "Ich kann zentrale Gemeinsamkeiten und Unterschiede zwischen Hallstatt- und La-Tène-Kultur sowie zwischen Bronze- und Eisenzeit herausarbeiten.",
+      "Ich kann die Kurgan-Hypothese zur Herkunft der Indogermanen und die sie stützenden Belege (Sprache, Archäologie, Genetik) erläutern."
+    ],
+    "fertigkeiten": [
+      "Ich kann archäologische Quellen der Eisenzeit (z.B. Grabhügel, Waffenfunde, Kunstobjekte, Münzen) interpretieren und ihre Aussagekraft beurteilen.",
+      "Ich kann den wirtschaftlichen und kulturellen Austausch eisenzeitlicher Gruppen in Europa anhand konkreter Beispiele (Salzhandel, Weinimport aus Massalia, Fernhandelsgüter) erklären.",
+      "Ich kann erklären, wie technische Innovationen (Eisengewinnung, Schmiedetechniken, Pflugschar, Sense, Drehmühle) langfristige soziale und ökonomische Veränderungen auslösten.",
+      "Ich kann antike Schriftquellen (griechische und römische Autoren) und archäologische Befunde miteinander verknüpfen und ihre jeweilige Zuverlässigkeit kritisch abwägen."
+    ],
+    "metakognitiv": [
+      "Ich kann einschätzen, wo die Grenzen unseres Wissens über eine schriftlose Vorgeschichte liegen und warum manche Fragen (z.B. Ursachen der keltischen Wanderungen) offen bleiben.",
+      "Ich kann konkurrierende wissenschaftliche Hypothesen (z.B. Kurgan- versus Anatolien-These) gegenüberstellen und begründen, warum eine Synthese sinnvoll sein kann.",
+      "Ich kann reflektieren, wie technologischer Fortschritt, Handel und ökologische Folgen (z.B. Abholzung) auch für Gegenwartsfragen bedeutsam bleiben."
+    ]
+  },
+  "lehrerhinweis": {
+    "text": "## Didaktische Verortung\n\nDie Einheit führt die Lernenden von einer technikgeschichtlichen Innovation (Eisenmetallurgie) zu deren weitreichenden gesellschaftlichen, wirtschaftlichen und kulturellen Folgen. Dieses Vorgehen entspricht dem Prinzip des **exemplarischen Lernens**: Am Fallbeispiel Eisen lässt sich zeigen, wie technologischer Fortschritt Machtstrukturen, Handelsnetze und Siedlungsformen umformt – eine Denkfigur, die bis in Gegenwartsfragen (Ressourcenverbrauch, Abholzung, Globalisierung von Handel) trägt.\n\nBesonders ertragreich ist die Einheit für die **historische Methodenkompetenz**: Erstmals in der mitteleuropäischen Vorgeschichte treffen archäologische Befunde (Hallstatt-Gräber, La-Tène-Funde, Oppida) auf antike Schriftquellen (Hekataios, Herodot, Caesar). Damit lässt sich die Quellenkritik konkret einüben – etwa die kritische Distanz zu Fremdzuschreibungen wie dem 'keltischen Furor'.\n\nDer Exkurs zu den Indogermanen eignet sich hervorragend für die Förderung **metakognitiver Kompetenzen**: Die Gegenüberstellung von Kurgan- und Anatolien-Hypothese und die Einbeziehung von Sprache, Archäologie und Genetik zeigen, wie wissenschaftliche Erkenntnis interdisziplinär entsteht und wo ihre Grenzen liegen. Empfehlenswert ist, offen zu halten, dass viele Fragen (Ursachen der keltischen Wanderungen, Funktion der Viereckschanzen, Charakter der Oppida) bewusst unbeantwortet bleiben – dies ist kein Defizit, sondern Kern historischen Arbeitens über schriftlose Epochen.\n\nDer regionale Bezug (Zürich, Genf, Lausanne als keltische Gründungen; La Tène am Neuenburgersee; Funde aus dem Tessin, aus Bern und Grächwil) bietet Anknüpfungspunkte für die Identifikation der Lernenden und lässt sich für exkursionsartige oder projektorientierte Vertiefungen nutzen.",
+    "kernpunkte": [
+      "Technikgeschichte als Ausgangspunkt: Eisen als Motor sozialer, ökonomischer und ökologischer Veränderungen",
+      "Quellenkritik einüben durch Verknüpfung archäologischer Befunde und antiker Schriftquellen (Fremdzuschreibung beachten)",
+      "Indogermanen-Exkurs als Anlass für Reflexion über konkurrierende Hypothesen und interdisziplinäre Evidenz (Sprache, Archäologie, Genetik)",
+      "Offen bleibende Fragen bewusst thematisieren als Wesensmerkmal der Vorgeschichtsforschung",
+      "Regionalen Schweizer Bezug (Oppida, La Tène, lokale Funde) zur Motivation und Vertiefung nutzen",
+      "Gegenwartsrelevanz herausarbeiten: Ressourcenverbrauch, Abholzung, Handel und Innovation"
+    ]
+  },
+  "vorwissen": {
+    "text": "## Woran du anknüpfen kannst\n\nBevor wir in die Eisenzeit eintauchen, lohnt es sich, einige bereits bekannte Zusammenhänge zu vergegenwärtigen:\n\n- **Bronzezeit:** Du weisst, dass Bronze eine Legierung aus Kupfer und Zinn ist und dass diese beiden Rohstoffe oft aus weit entfernten Regionen beschafft werden mussten. Halte diesen Punkt fest – er erklärt, warum Eisen später so attraktiv wurde.\n- **Neolithische Revolution:** Ackerbau, Viehhaltung und die Entstehung von Vorräten und Besitz sind dir vertraut. In der Eisenzeit erlebt die Landwirtschaft mit Pflugschar, Sense und Drehmühle einen weiteren Innovationsschub.\n- **Antike Hochkulturen:** Griechische Kolonien (etwa Massalia/Marseille) und das expandierende Römische Reich kennst du bereits. Sie sind die Handelspartner und späteren Gegner der Kelten.\n- **Quellenarten:** Du unterscheidest zwischen materiellen (archäologischen) und schriftlichen Quellen. In dieser Einheit treffen beide erstmals nördlich der Alpen aufeinander.\n\n**Leitgedanke zum Mitnehmen:** Eine einzige technische Neuerung – die Fähigkeit, Eisen zu gewinnen – zieht eine Kette von Veränderungen nach sich: in der Landwirtschaft, im Handel, in der Kriegsführung, in den Machtverhältnissen und sogar in der Umwelt. Achte beim Lesen darauf, wie diese Bereiche zusammenhängen."
+  },
+  "einleitung": {
+    "text": "## Eine Welt ohne Stahl\n\nStell dir ein Leben ohne Messer, Werkzeuge, Nägel oder Schrauben aus Metall vor. So ging es den Menschen vor rund 3000 Jahren – bis sie lernten, **Eisen** zu gewinnen und zu verarbeiten. Dieses Metall war härter, elastischer und vor allem viel leichter zu beschaffen als Bronze, denn Eisenerz findet sich vielerorts direkt unter der Erdoberfläche. Mit Eisen liessen sich schärfere Schwerter, stabilere Pflüge und bessere Werkzeuge herstellen.\n\nDiese technologische Revolution markiert den Beginn der **Eisenzeit**, die in Mitteleuropa etwa von 800 v. Chr. bis zur Zeitenwende dauerte. Sie ist weit mehr als eine archäologische Epoche mit interessanten Funden: In dieser Zeit entstanden die ersten stadtähnlichen Siedlungen nördlich der Alpen – die **Oppida**. Manche von ihnen existieren bis heute: Zürich, Genf und Lausanne gehen auf keltische Gründungen zurück.\n\nBesonders spannend ist diese Epoche, weil wir zum ersten Mal nördlich der Alpen auf eine Kultur treffen, über die nicht nur Archäologen, sondern auch **antike Schriftsteller** berichten. Griechische und römische Autoren hinterliessen faszinierende – wenn auch nicht immer zuverlässige – Beschreibungen der Kelten. Zusammen mit den archäologischen Funden ergibt sich so ein lebendiges Bild einer Kultur, die Europa nachhaltig prägte.\n\nWir unternehmen eine Zeitreise von der ersten Eisenschmelze über die salzreichen Fürstensitze der Hallstatt-Kultur und die geheimnisvolle Herkunft der Indogermanen bis zu den keltischen Oppida und ihrem Untergang unter dem Druck von Germanen und Römern. Dabei zeigt sich immer wieder, wie technologischer Fortschritt, Handel und kultureller Austausch Gesellschaften formen – Fragen, die bis heute hochaktuell sind."
+  },
+  "haupttext": [
+    {
+      "typ": "text",
+      "text": "## Die Revolution des Eisens (1200–800 v. Chr.)\n\nUm 1200 v. Chr. vollzog sich in Kleinasien und Ägypten eine technologische Revolution, deren Auswirkungen die Entwicklung Europas nachhaltig prägen sollten: Die **Eisenmetallurgie** begann, die jahrtausendealte Bronze-Technologie abzulösen. Über weitreichende Handelsnetzwerke gelangte das Wissen um die Eisenverarbeitung rasch nach Europa und leitete dort eine neue Epoche ein – die Eisenzeit.\n\nDie Vorteile des neuen Materials lagen auf der Hand: Eisen ist härter als Bronze und ermöglichte schärfere Klingen sowie widerstandsfähigere Werkzeuge. Zugleich erwies sich das Metall als elastischer und damit weniger bruchanfällig als die Kupfer-Zinn-Legierung. Der entscheidende ökonomische Vorteil lag jedoch in der **Verfügbarkeit des Rohstoffs**: Während für Bronze zwei verschiedene, oft weit entfernte Erzvorkommen – Kupfer und Zinn – erschlossen werden mussten, fand sich Eisenerz an vielen Orten direkt unter der Erdoberfläche."
+    },
+    {
+      "typ": "tabelle",
+      "beschriftung": "Bronze und Eisen im Vergleich",
+      "kopf": [
+        "Kriterium",
+        "Bronze",
+        "Eisen"
+      ],
+      "zeilen": [
+        [
+          "Härte",
+          "weicher",
+          "härter"
+        ],
+        [
+          "Elastizität",
+          "bruchanfälliger",
+          "elastischer, weniger bruchanfällig"
+        ],
+        [
+          "Rohstoffe",
+          "zwei oft weit entfernte Erze (Kupfer + Zinn)",
+          "ein Erz, vielerorts oberflächennah"
+        ],
+        [
+          "Verwendung zu Beginn der Eisenzeit",
+          "weiterhin Schmuck und Gefässe",
+          "zunehmend Waffen, Werkzeuge, Wagenräder"
+        ]
+      ]
+    },
+    {
+      "typ": "text",
+      "text": "## Die Kunst der Eisengewinnung\n\nDie Verarbeitung von Eisenerz zu schmiedefähigem Eisen stellte die prähistorischen Metallurgen vor beträchtliche Herausforderungen und erforderte mehrere aufwendige Schritte. Zunächst wurde hochwertiges Erz aus dem Boden gebrochen und über offenem Feuer geröstet. Durch Zerkleinerung reduzierte man den Wassergehalt und bereitete das Material für die Verhüttung vor.\n\nDiese erfolgte in einfachen, kaminartigen **Schmelzöfen aus Lehm**, die man von oben schichtweise mit zerkleinertem Erz und Holzkohle befüllte. In der unteren Brennkammer sorgte ein Blasebalg für intensive Sauerstoffzufuhr. Bei Temperaturen zwischen 900 und 1200 Grad Celsius schmolz die Schlacke – die nichtmetallischen Bestandteile – und floss nach unten ab. Da die Öfen noch keine Abstichöffnung besassen, musste die gesamte Konstruktion nach jedem Prozess abgetragen werden. Zurück blieb in der Grube die sogenannte **Eisenluppe**, ein schwammartiger Roheisenklumpen mit erheblichen Schlacke- und Holzkohleresten.\n\nIn einem weiteren Arbeitsschritt erhitzte man die Luppe erneut und trieb durch wiederholtes Hämmern möglichst viel Schlacke aus, um reines Eisen zu gewinnen. Dieses grundlegende Verfahren blieb bis zur Einführung des Hochofens im Spätmittelalter im Wesentlichen unverändert."
+    },
+    {
+      "typ": "figur",
+      "bild": "1G-Eisenzeit-Eisenverarbeitung.png",
+      "beschriftung": "Die Eisenschmelze in der frühen Eisenzeit: vom Abbau des Raseneisenerzes über die Ofengrube bis zum Erhitzen und Schmieden, um die Schlacke abzuschlagen und reines Eisen zu gewinnen.",
+      "quelle": "1G-Eisenzeit.pdf, Abb. 1"
+    },
+    {
+      "typ": "text",
+      "text": "## Ökologische Konsequenzen\n\nDie Eisenproduktion hatte gravierende ökologische Folgen: Der enorme Bedarf an Holzkohle für die Verhüttung führte zur massiven **Abholzung** ganzer Landstriche. Die damit einhergehende Bodenerosion veränderte ganze Regionen nachhaltig und zeigt, dass bereits prähistorische Gesellschaften tiefgreifende Eingriffe in ihre Umwelt vornahmen."
+    },
+    {
+      "typ": "text",
+      "text": "## Die Hallstatt-Kultur: Salz, Macht und Fernhandel (800–450 v. Chr.)\n\nTrotz der Einführung des Eisens blieb Bronze zunächst das vorherrschende Metall, insbesondere für Schmuck und Gefässe. Erst im Laufe des 8. Jahrhunderts v. Chr. gewann Eisen an Bedeutung – vor allem für Waffen, Werkzeuge und die Beschlagung von Wagenrädern.\n\nDie frühe Eisenzeit in Mitteleuropa und auf den Britischen Inseln wird nach einem aussergewöhnlichen Fundort benannt: **Hallstatt** im österreichischen Salzkammergut. Der Name bedeutet „Salzstadt“ und ist programmatisch: Die dort entdeckten über tausend Gräber – einer der grössten prähistorischen Friedhöfe Mitteleuropas – zeugen von einer durch Salzhandel wohlhabend gewordenen Gesellschaft.\n\n### Das „weisse Gold“ der Hallstatt-Zeit\n\nSalz war in meeresfernen Gebieten knapp und entwickelte sich zu einem der wichtigsten Handelsgüter der Epoche. Seine Bedeutung ging weit über die Konservierung von Lebensmitteln hinaus: In Viehhaltung, Gerberei und Metallverarbeitung war es unverzichtbar. Mit dem Beginn der Eisenzeit stieg der Bedarf dramatisch an, und das „weisse Gold“ diente auch als Zahlungsmittel. Die Salzbergwerke von Hallstatt, seit der Bronzezeit in Betrieb, gehörten zu den ergiebigsten Europas und bildeten die Grundlage für weitreichende Handelsnetze. Reiche Grabbeigaben aus verschiedenen Teilen Europas belegen die weitgespannten Kontakte der Hallstatt-Menschen."
+    },
+    {
+      "typ": "figur",
+      "bild": "1G-Eisenzeit-Hallstatt-Grab.jpg",
+      "beschriftung": "Modell eines Grabhügels aus der Hallstattzeit. Verstorbene wurden häufig in hölzernen Grabkammern beigesetzt, die mit Steinen abgedeckt und mit Erde überschüttet wurden.",
+      "quelle": "1G-Eisenzeit.pdf, Abb. 6"
+    },
+    {
+      "typ": "text",
+      "text": "## Bestattungskult und soziale Differenzierung\n\nMit dem Aufkommen der Hallstatt-Kultur vollzog sich eine Abkehr von der Urnenbestattung: Man kehrte zur Errichtung monumentaler **Grabhügel** zurück. Mitunter markierte eine Steinstele die Grabstätte.\n\nDie Beigaben geben Aufschluss über Alltag und Wertvorstellungen: Rasiermesser und Nagelschneider in Männergräbern bezeugen die Bedeutung der Körperpflege. Männer wie Frauen wurden mit Tongeschirr und Ringschmuck bestattet. Erstmals in Mitteleuropa finden sich **Fibeln** – verzierte Gewandnadeln, Vorläufer der modernen Sicherheitsnadel, die die Kleidung zusammenhielten.\n\nDie Gräber der hallstattzeitlichen Fürsten zeichneten sich durch monumentale Bauweise und aussergewöhnliche Prestigeobjekte aus: vierrädrige Wagen, bronzenes Trinkgeschirr, Importgüter aus dem Mittelmeerraum sowie goldene Arm- und Halsringe dokumentieren eine ausgeprägte soziale Hierarchie."
+    },
+    {
+      "typ": "figur",
+      "bild": "1G-Eisenzeit-Fibel.jpg",
+      "beschriftung": "Keltische Fibel – eine verzierte Gewandnadel, die als Vorläufer der Sicherheitsnadel die Kleidung zusammenhielt.",
+      "quelle": "1G-Eisenzeit.pdf, Abb. 3"
+    },
+    {
+      "typ": "text",
+      "text": "## Fürstensitze und Fernhandel\n\nEntlang der Handelswege entstanden befestigte Siedlungen – **Fürstensitze**, in denen regionale Machthaber residierten. Diese Elite importierte griechische Keramik und Wein, der in charakteristischen Amphoren transportiert wurde. Der Grossteil des Weins stammte aus **Massalia** (dem heutigen Marseille), einer um 600 v. Chr. gegründeten griechischen Kolonie, und gelangte über das Rhonetal und das Burgund in die mitteleuropäischen Zentren. Solche Luxusgüter blieben der Oberschicht vorbehalten – ebenso wie mediterrane Liegemöbel mit kunstvoll gedrechselten Beinen und exotische Früchte wie Feigen."
+    },
+    {
+      "typ": "figur",
+      "bild": "1G-Eisenzeit-Luxus.png",
+      "beschriftung": "Importierte Luxusgüter belegen die Fernhandelskontakte der eisenzeitlichen Eliten mit dem Mittelmeerraum.",
+      "quelle": "1G-Eisenzeit.pdf"
+    },
+    {
+      "typ": "text",
+      "text": "## Militärische Innovationen\n\nDie Hallstatt-Kultur zeichnete sich auch durch bedeutende militärische Neuerungen aus. Aus den osteuropäischen Steppen nördlich des Schwarzen Meeres importierte man eine neue **Pferderasse**, die grösser und schneller war als die bisherigen Tiere. Gleichzeitig revolutionierte das **eiserne Langschwert** die Kriegsführung: Mit über einem Meter Länge eignete es sich kaum für den Fusskampf, wird jedoch als Reiterwaffe interpretiert – zumal in den Gräbern seiner Besitzer häufig Pferdegeschirr gefunden wurde. Diese Langschwerter stellen eine eigenständige Entwicklung der Hallstatt-Kultur dar; die Reiterkrieger Osteuropas und Asiens kannten sie nicht."
+    },
+    {
+      "typ": "text",
+      "text": "## Exkurs: Die Indogermanen – Auf der Suche nach der Urheimat\n\nDie Frage nach der Herkunft der europäischen Völker und Sprachen beschäftigt die Wissenschaft seit dem 18. Jahrhundert. Die Entdeckung, dass Sprachen wie Griechisch, Latein, Sanskrit und die germanischen Sprachen systematische Ähnlichkeiten aufweisen, führte zur Hypothese einer gemeinsamen Ursprache: dem **Proto-Indoeuropäischen** oder Urindogermanischen.\n\n### Die Kurgan-Hypothese\n\nDie heute vorherrschende Kurgan-Hypothese der Archäologin Marija Gimbutas lokalisiert die Urheimat der Indogermanen in den **pontisch-kaspischen Steppen** zwischen Schwarzem Meer und Kaspischem Meer. Demnach verliessen um 4000–3000 v. Chr. Gruppen von Steppennomaden ihre Gebiete und breiteten sich in mehreren Wanderungswellen nach Westen, Süden und Osten aus.\n\nDiese Expansion wurde durch zwei technologische Innovationen ermöglicht: die **Domestizierung des Pferdes** und die **Erfindung des Rades**. Beides verlieh den Steppenvölkern eine bis dahin ungekannte Mobilität und militärische Überlegenheit. Die charakteristischen Grabhügel dieser Kulturen werden als „Kurgane“ bezeichnet – ein Wort, das sich bis in die Hallstatt-Zeit verfolgen lässt."
+    },
+    {
+      "typ": "text",
+      "text": "### Sprache, Kultur und genetische Spuren\n\nDie indogermanischen Sprachen bilden heute die grösste Sprachfamilie der Welt und umfassen neben den europäischen auch persische und indische Idiome. Rekonstruktionen des Proto-Indoeuropäischen zeigen ein Vokabular, das auf eine pastorale Lebensweise hindeutet: Begriffe für Pferd, Rind, Schaf und Wagen lassen sich erschliessen, ebenso Verwandtschaftsbegriffe und religiöse Konzepte.\n\nNeuere **genetische Studien** stützen die Kurgan-Hypothese: Sie belegen massive Migrationen aus den Steppen nach Europa in der Bronze- und Eisenzeit. Die DNA-Analyse prähistorischer Skelette zeigt, dass diese Wanderungen mit genetischen Umbrüchen einhergingen und die europäische Bevölkerung nachhaltig prägten. Die Kelten der Hallstatt- und La-Tène-Zeit gehören zu den westlichen Nachfahren dieser indogermanischen Expansion.\n\nDennoch bleibt die Indogermanenfrage kontrovers: Alternative Hypothesen lokalisieren die Urheimat in **Anatolien** und verbinden die Ausbreitung mit der neolithischen Revolution. Die Wahrheit liegt möglicherweise in einer Synthese: Mehrere Migrationswellen aus unterschiedlichen Regionen könnten zur sprachlichen und kulturellen Vielfalt Europas beigetragen haben."
+    },
+    {
+      "typ": "text",
+      "text": "## Die Kelten: Von der La-Tène-Kultur zur Oppida-Zivilisation (450–15 v. Chr.)\n\nAb dem 5. Jahrhundert v. Chr. wurde die Hallstatt-Kultur allmählich von der **La-Tène-Kultur** abgelöst, benannt nach dem Fundort La Tène am Neuenburgersee. Dort entdeckte man Mitte des 19. Jahrhunderts in einem ehemaligen Moorgebiet rund 2500 Eisenobjekte, die offensichtlich als Opfergaben im See versenkt worden waren.\n\nDie Menschen der La-Tène-Kultur werden als **Kelten** bezeichnet – das erste Volk nördlich der Alpen, das in schriftlichen Quellen namentlich erwähnt wird. Im 6. Jahrhundert v. Chr. berichteten die griechischen Historiker Hekataios und Herodot über die Kelten, hatten jedoch nur vage Vorstellungen von ihrem ausgedehnten Siedlungsgebiet. Die keltische Bevölkerung im heutigen Frankreich wird als **Gallier** bezeichnet, jene auf dem Gebiet der heutigen Schweiz als **Helvetier** – wobei es sich kulturell um dieselbe Gruppe handelt."
+    },
+    {
+      "typ": "figur",
+      "bild": "1G-Eisenzeit-Karte-Latene.png",
+      "beschriftung": "Die La-Tène-Kultur und die keltische Expansion vom 5. bis 3. Jahrhundert v. Chr.",
+      "quelle": "1G-Eisenzeit.pdf, Abb. 10"
+    },
+    {
+      "typ": "text",
+      "text": "### Künstlerische Revolution\n\nCharakteristisch für die keltische La-Tène-Kultur ist die künstlerische Gestaltung von Gegenständen und Skulpturen. Während die Hallstatt-Zeit vor allem geometrische Muster bevorzugte, traten nun **pflanzliche Motive und menschliche Darstellungen** in den Vordergrund. Häufig wurden auch Fabelwesen, Fratzen und Dämonen abgebildet. Viele Darstellungen sind mehrdeutig: In Pflanzenmotiven lassen sich bei genauem Hinsehen manchmal Gesichter erkennen. Schädeltrophäen auf Türpfosten sollten vermutlich Unheil abwehren.\n\nIn der frühen La-Tène-Kultur setzte sich die Bestattungstradition der Grabhügel fort. Die Gräber enthielten nun reichen Goldschmuck sowie etruskische und griechische Keramik und Metallgefässe. Höhergestellte Männer wurden als Krieger mit Helm, Lanze, Schild und Schwert ausgestattet. Erstmals tauchen auch leichte, wendige zweirädrige **Streitwagen** als Grabbeigaben auf."
+    },
+    {
+      "typ": "text",
+      "text": "## Keltische Expansion: Zwischen Krieg und Kolonisation\n\nAb dem 4. Jahrhundert v. Chr. erschütterten massive Wanderungsbewegungen keltischer Gruppen weite Teile Europas. Die Ursachen bleiben rätselhaft: Missernten und Überbevölkerung, innenpolitische Unruhen, Klimaverschlechterung oder die Anziehungskraft der reichen mediterranen Kulturen kommen als Erklärungen infrage.\n\nGallische Gruppen eroberten Norditalien und unternahmen von dort Feldzüge weiter nach Süden. Viele Wanderungen zielten jedoch auf dauerhafte Ansiedlung: Ganze Haushalte mit Vorräten und Haustieren wurden auf gedeckten Wagen mitgeführt. Dies führte teils zu gewaltsamen Konflikten, doch archäologische Funde belegen auch friedliche Koexistenz. Nach mehreren Niederlagen kam die Wanderungsbewegung im Laufe des 3. Jahrhunderts v. Chr. zum Erliegen."
+    },
+    {
+      "typ": "tabelle",
+      "beschriftung": "Stationen der keltischen Expansion",
+      "kopf": [
+        "Datum",
+        "Ereignis"
+      ],
+      "zeilen": [
+        [
+          "385 v. Chr.",
+          "Kelten belagern das römische Kapitol; laut Überlieferung rettet das Geschnatter der Gänse die Stadt"
+        ],
+        [
+          "335 v. Chr.",
+          "Alexander der Grosse empfängt eine keltische Delegation"
+        ],
+        [
+          "279 v. Chr.",
+          "Keltische Krieger plündern Delphi, werden aber von makedonischen Truppen geschlagen"
+        ],
+        [
+          "Anfang 2. Jh. v. Chr.",
+          "Keltische Gruppen überqueren den Bosporus und dringen nach Kleinasien vor"
+        ]
+      ]
+    },
+    {
+      "typ": "text",
+      "text": "### Keltische Kriegsführung\n\nDie keltischen Kämpfer der La-Tène-Zeit waren meist mit Lanze und einem länglichen, bis zur Brust reichenden Schild aus Eisenblech ausgerüstet. Die wichtigste Waffe war das **Schwert**. Vermutlich trugen nur Anführer Helme und Körperpanzer aus Metall.\n\nAntike Autoren beschreiben den „keltischen Furor“ – die Kampfeswut, die vor der Schlacht durch Lärm, Drohungen und Kriegsgesänge geschürt wurde. Dies sollte den Gegner einschüchtern. Die Kelten galten als wilde Kämpfer und wurden oft als Söldner angeheuert. War ein Angriff jedoch erfolglos, brach die Heeresordnung oft zusammen und die Soldaten flohen oder ergaben sich."
+    },
+    {
+      "typ": "text",
+      "text": "## Wirtschaft und Innovation\n\nDie Kelten waren die erste Kultur Mitteleuropas, die eigene **Münzen** prägte. Angeregt durch hellenistische Münzen, die keltische Söldner im 3. Jahrhundert v. Chr. aus dem Süden mitbrachten, imitierten sie Goldmünzen mit dem Porträt Philipps von Makedonien. Sogleich begann auch die Falschmünzerei: Bronzekerne wurden mit Silber oder Gold überzogen und geprägt.\n\nFunde von Luxusgütern zeugen von intensiven Kontakten mit dem Mittelmeerraum. Wein wurde in grossen Mengen in den Norden verkauft, wie zahlreiche Amphorenfunde belegen. Auch Fischsauce war im Norden beliebt. Häufig finden sich importierte Trinkgefässe aus glänzender Keramik und farbigem Glas.\n\n### Landwirtschaftliche Revolution\n\nDer Bedarf an Eisen war immens: **Pflugscharen und Sensen** aus Eisen erleichterten Aussaat und Ernte erheblich. Das mit der Sense geschnittene Stroh erwies sich als ausgezeichnetes Winterfutter für Stallvieh. Die **Drehmühle** ermöglichte die Verarbeitung grösserer Getreidemengen. Diese Innovationen waren Voraussetzung für die Entstehung keltischer Städte: Ohne sie wäre die Ernährung der städtischen Bevölkerung unmöglich gewesen."
+    },
+    {
+      "typ": "text",
+      "text": "## Oppida: Die ersten Städte Mitteleuropas\n\nDie keltischen Städte werden mit dem lateinischen Begriff **Oppidum** (Plural: Oppida) bezeichnet. Sie waren Knotenpunkte der Wirtschaft und des Kultes, oft auch Zentren der Eisen- und Keramikproduktion, der Glasverarbeitung, Münzprägung und des Handwerks.\n\n### Architektur und Befestigung\n\nZwischen dem späten 2. und dem 1. Jahrhundert v. Chr. waren Oppida von England bis Ungarn verbreitet – weshalb diese Epoche als **Oppida-Zivilisation** bezeichnet wird. In Gallien westlich des Rheins waren die Städte durch charakteristische Befestigungen gekennzeichnet, die Caesar als **„Murus Gallicus“** („gallische Mauer“) beschrieb: übereinander gestapelte Holzrahmen, mit Steinen und Erde gefüllt, deren Vorderseite mit Steinen verkleidet war. Der Holzbedarf für solche Befestigungen, die fünf bis zehn Kilometer Länge erreichen konnten, war enorm.\n\n### Grösse, Struktur und Charakter\n\nDie Ausdehnung der Oppida variierte erheblich; manche erstreckten sich über mehr als 1000 Hektar. Sie wurden strategisch günstig auf Hügeln oder in Flussschleifen angelegt. In der Schweiz gehen **Zürich (Turicum), Lausanne (Lousonna) und Genf (Genava)** auf keltische Oppida zurück. Im Zentrum standen öffentliche Gebäude wie Tempel und Marktplatz, entlang der Hauptstrasse befanden sich Werkstätten.\n\nViele Oppida können jedoch nicht als vollständige Städte gelten, da sie nur locker besiedelt waren. Den Hauptteil bildeten oft Bauernhöfe; selbst Ackerflächen fanden sich innerhalb der Mauern. Selbst grosse Oppida hatten nicht mehr als 10'000 Einwohner."
+    },
+    {
+      "typ": "text",
+      "text": "## Religion, Mythen und Druiden\n\nAus griechischen und römischen Quellen ist einiges über die keltische Religion bekannt, doch vieles bleibt rätselhaft. Die Kelten glaubten an die **Unsterblichkeit der Seele**. Vermutlich regional unterschiedliche Gottheiten wurden in heiligen Hainen verehrt, in denen auch Feldzeichen und Beute aufbewahrt wurden.\n\nWurden Gebrauchsgegenstände oder Waffen geopfert, zerstörte man sie vorher. Dies verringerte vermutlich die Diebstahlgefahr und signalisierte, dass die Gegenstände nun den Gottheiten gehörten. Auch Tier- und Menschenopfer sind belegt. Noch heute sind keltische **Viereckschanzen** aus dem 2. und 1. Jahrhundert v. Chr. im Gelände sichtbar, wobei unklar ist, ob sie religiösen Kulten dienten oder Überreste von Gutshöfen sind."
+    },
+    {
+      "typ": "figur",
+      "bild": "1G-Eisenzeit-Votivfiguren.png",
+      "beschriftung": "Votivfigürchen aus Bronze (5. bis 1. Jahrhundert v. Chr.), gefunden auf dem keltischen Kultplatz Gutenberg bei Balzers im Fürstentum Liechtenstein.",
+      "quelle": "1G-Eisenzeit.pdf, Abb. 16"
+    },
+    {
+      "typ": "text",
+      "text": "### Die Druiden\n\nDie Kulte wurden von den **Druiden** geleitet, die nicht nur Priester, sondern auch Richter, Gelehrte und Lehrer waren. Sie gehörten zur Oberschicht und genossen Privilegien wie Steuerbefreiung und Befreiung vom Militärdienst. Obwohl es heilige Stätten gab, an denen nur Frauen Opfer darbrachten, sind Druidinnen erst in römischer Zeit belegt – und dann offenbar als Wahrsagerinnen.\n\nDie keltischen Mythen wurden nur mündlich überliefert und erst ab dem 11. Jahrhundert von christlichen Mönchen niedergeschrieben. Welche Elemente aus der La-Tène-Zeit stammen und welche später hinzukamen, bleibt daher unklar."
+    },
+    {
+      "typ": "text",
+      "text": "## Der Niedergang der Oppida-Zivilisation\n\nAb 100 v. Chr. befand sich die Welt der Oppida im Niedergang. Wein aus dem Mittelmeerraum gelangte kaum noch in den Norden. Alteisen wurde zunehmend rezykliert, die blühende Eisenproduktion kam zum Erliegen. Die Oppida verloren ihre Märkte, die Geldwirtschaft wich der Tauschwirtschaft, die Münzprägung wurde eingestellt. Die Bevölkerung ging zurück.\n\nGleichzeitig unternahmen germanische Gruppen wie **Kimbern und Teutonen** vermehrt Raubzüge. Die spätkeltische Oppida-Zivilisation wurde von mehreren Seiten bedrängt: Während Germanen von Norden vorstiessen, drangen die Römer von Süden vor."
+    },
+    {
+      "typ": "tabelle",
+      "beschriftung": "Die römische Eroberung der keltischen Gebiete",
+      "kopf": [
+        "Datum",
+        "Ereignis"
+      ],
+      "zeilen": [
+        [
+          "3. Jh. v. Chr.",
+          "Rom erobert die keltischen Gebiete Oberitaliens"
+        ],
+        [
+          "58 v. Chr.",
+          "Gaius Iulius Caesar besiegt die Helvetier"
+        ],
+        [
+          "51 v. Chr.",
+          "Caesar unterwirft die letzten gallischen Stämme"
+        ],
+        [
+          "15 v. Chr.",
+          "Römische Legionen unter Augustus überschreiten den Rhein und erobern die keltischen Gebiete bis zur Donau"
+        ]
+      ]
+    },
+    {
+      "typ": "text",
+      "text": "Mit der römischen Besetzung endete in Mitteleuropa endgültig die schriftlose Vorgeschichte. Die Kelten hinterliessen jedoch ein bedeutendes Erbe: ihre Sprache, ihre Kunstfertigkeit, ihre landwirtschaftlichen Innovationen und nicht zuletzt die ersten städtischen Siedlungen nördlich der Alpen legten wichtige Grundlagen für die weitere Entwicklung Europas."
+    }
+  ],
+  "verstaendnisfragen": [
+    "Wann begann in Kleinasien und Ägypten die Ablösung der Bronze durch die Eisenmetallurgie?",
+    "Welche drei materiellen Vorteile bot Eisen gegenüber Bronze?",
+    "Wie heisst der schwammartige Roheisenklumpen, der nach der Verhüttung in der Grube zurückblieb?",
+    "Wonach ist die Hallstatt-Kultur benannt und was bedeutet der Name?",
+    "Warum wurde Salz in der Hallstatt-Zeit als „weisses Gold“ bezeichnet?",
+    "Was sind Fibeln und wozu dienten sie?",
+    "Aus welcher griechischen Kolonie stammte der Grossteil des importierten Weins?",
+    "Wo lokalisiert die Kurgan-Hypothese die Urheimat der Indogermanen?",
+    "Welche zwei technologischen Innovationen ermöglichten laut Kurgan-Hypothese die Ausbreitung der Steppenvölker?",
+    "Wonach ist die La-Tène-Kultur benannt?",
+    "Wie werden die keltischen Städte Mitteleuropas genannt und was leistete die „Murus Gallicus“?",
+    "Welche Funktionen übten die Druiden in der keltischen Gesellschaft aus?",
+    "In welchem Jahr besiegte Caesar die Helvetier?"
+  ],
+  "aufgaben": [
+    {
+      "afb": 1,
+      "text": "Beschreibe die einzelnen Arbeitsschritte der Eisengewinnung in der frühen Eisenzeit, vom Abbau des Erzes bis zum reinen Eisen.",
+      "loesung": "Erwartet wird eine geordnete Wiedergabe: (1) Hochwertiges Erz wird aus dem Boden gebrochen und über offenem Feuer geröstet; (2) durch Zerkleinerung wird der Wassergehalt reduziert; (3) Verhüttung in kaminartigen Lehm-Schmelzöfen, die schichtweise von oben mit Erz und Holzkohle befüllt werden; (4) ein Blasebalg sorgt für Sauerstoffzufuhr, bei 900–1200 °C schmilzt die Schlacke und fliesst ab; (5) da keine Abstichöffnung vorhanden ist, wird der Ofen abgetragen, zurück bleibt die Eisenluppe; (6) erneutes Erhitzen und wiederholtes Hämmern treibt die Schlacke aus und ergibt reines Eisen."
+    },
+    {
+      "afb": 1,
+      "text": "Nenne die wichtigsten wirtschaftlichen und militärischen Innovationen der Kelten, wie sie im Text beschrieben werden.",
+      "loesung": "Wirtschaftlich: erste eigene Münzprägung in Mitteleuropa (Imitation makedonischer Goldmünzen), landwirtschaftliche Neuerungen wie eiserne Pflugscharen und Sensen sowie die Drehmühle, intensiver Fernhandel (Wein, Fischsauce, importierte Trinkgefässe). Militärisch bereits in der Hallstatt-Zeit: importierte grössere/schnellere Pferderasse und das eiserne Langschwert als Reiterwaffe; in der La-Tène-Zeit Ausrüstung mit Lanze, langem Eisenblech-Schild und Schwert sowie leichte zweirädrige Streitwagen."
+    },
+    {
+      "afb": 2,
+      "text": "Erläutere anhand des Textes, warum der ökonomische Vorteil des Eisens als entscheidender galt als seine materiellen Eigenschaften.",
+      "loesung": "Die materiellen Vorteile (Härte, Elastizität/geringere Bruchanfälligkeit) waren zwar bedeutend, doch der entscheidende Vorteil lag in der Verfügbarkeit des Rohstoffs: Für Bronze mussten zwei verschiedene, oft weit entfernte Erze (Kupfer und Zinn) beschafft werden, was aufwendige Handels- und Beschaffungswege erforderte. Eisenerz dagegen fand sich vielerorts direkt oberflächennah unter der Erde. Damit war Eisen unabhängiger von komplexen Fernhandelsnetzen und breiter verfügbar, was seine Durchsetzung ökonomisch begünstigte."
+    },
+    {
+      "afb": 2,
+      "text": "Analysiere, welche Belege der Text für die weitreichenden Fernhandelskontakte der eisenzeitlichen Eliten anführt.",
+      "loesung": "Belege für die Hallstatt-Zeit: reiche Grabbeigaben aus verschiedenen Teilen Europas, Salzhandel als Grundlage weitgespannter Netze. Für die Fürstensitze: Import griechischer Keramik und von Wein aus Massalia (über Rhonetal und Burgund), mediterrane Liegemöbel und exotische Früchte wie Feigen. Für die La-Tène-/Keltenzeit: etruskische und griechische Keramik und Metallgefässe in Gräbern, Amphorenfunde als Beleg für Weinimport, importierte Trinkgefässe aus Keramik und farbigem Glas, Fischsauce sowie die Anregung der Münzprägung durch hellenistische Vorbilder. Diese Objekte dokumentieren intensive Kontakte mit dem Mittelmeerraum."
+    },
+    {
+      "afb": 2,
+      "text": "Vergleiche die künstlerische Gestaltung und die Bestattungssitten der Hallstatt-Kultur mit denen der frühen La-Tène-Kultur.",
+      "loesung": "Kunst: In der Hallstatt-Zeit dominierten geometrische Muster, in der La-Tène-Kultur traten pflanzliche Motive, menschliche Darstellungen, Fabelwesen, Fratzen und Dämonen sowie mehrdeutige Bilder in den Vordergrund. Bestattung: Beide Kulturen kannten Grabhügel (in Hallstatt nach Abkehr von der Urnenbestattung wieder aufgenommen). In der Hallstatt-Zeit finden sich Fibeln, Tongeschirr, Ringschmuck, bei Fürsten vierrädrige Wagen und Prestigeobjekte; in der frühen La-Tène-Zeit setzte sich die Grabhügeltradition fort, nun mit reichem Goldschmuck, etruskischer/griechischer Keramik, Kriegerausstattung (Helm, Lanze, Schild, Schwert) und erstmals leichten zweirädrigen Streitwagen statt vierrädriger Wagen."
+    },
+    {
+      "afb": 3,
+      "text": "Beurteile, inwiefern die im Text genannten Befunde (Sprachvergleich, rekonstruiertes Vokabular, genetische Studien) die Kurgan-Hypothese stützen und welche Vorbehalte bestehen bleiben.",
+      "loesung": "Stützende Argumente: Systematische Ähnlichkeiten zwischen Sprachen wie Griechisch, Latein, Sanskrit und den germanischen Sprachen weisen auf eine gemeinsame Ursprache hin; das rekonstruierte Vokabular (Pferd, Rind, Schaf, Wagen, Verwandtschafts- und religiöse Begriffe) deutet auf eine pastorale Steppenlebensweise; genetische Studien belegen massive Migrationen aus den Steppen nach Europa mit nachhaltigen genetischen Umbrüchen. Vorbehalte: Die Indogermanenfrage bleibt laut Text kontrovers, da alternative Hypothesen die Urheimat in Anatolien verorten und die Ausbreitung mit der neolithischen Revolution verbinden. Eine begründete Bewertung erkennt an, dass die genannten Befunde die Steppen-Herkunft plausibel machen, eine Synthese mehrerer Migrationswellen aber möglich ist."
+    },
+    {
+      "afb": 3,
+      "text": "Diskutiere anhand des Textes, ob die keltischen Oppida zu Recht als „die ersten Städte Mitteleuropas“ bezeichnet werden können.",
+      "loesung": "Für den Städtecharakter sprechen: Oppida waren Knotenpunkte von Wirtschaft und Kult, Zentren von Eisen-, Keramik- und Glasproduktion, Münzprägung und Handwerk; sie besassen öffentliche Gebäude (Tempel, Marktplatz), Werkstätten entlang der Hauptstrasse, monumentale Befestigungen (Murus Gallicus) und teils grosse Ausdehnung (über 1000 Hektar). Dagegen spricht: Viele Oppida waren nur locker besiedelt, bestanden zum Grossteil aus Bauernhöfen und enthielten sogar Ackerflächen innerhalb der Mauern; selbst grosse Oppida hatten nicht mehr als 10'000 Einwohner. Eine abgewogene Beurteilung kommt zum Schluss, dass Oppida wichtige städtische Funktionen und Grundlagen (landwirtschaftliche Innovationen zur Ernährung der Bevölkerung) aufwiesen, aber nicht durchgängig als vollständige Städte gelten können."
+    },
+    {
+      "afb": 3,
+      "text": "Bewerte, welche Faktoren zum Niedergang der Oppida-Zivilisation beitrugen und wie diese zusammenwirkten.",
+      "loesung": "Der Text nennt mehrere Faktoren: wirtschaftlicher Niedergang ab 100 v. Chr. (Wein gelangte kaum noch in den Norden, Alteisen wurde rezykliert statt neu produziert, Eisenproduktion und Märkte brachen weg, Geldwirtschaft wich der Tauschwirtschaft, Münzprägung wurde eingestellt, Bevölkerungsrückgang) sowie äusserer Druck von mehreren Seiten: germanische Gruppen wie Kimbern und Teutonen mit Raubzügen von Norden und die Römer von Süden (Eroberung Oberitaliens, Sieg über die Helvetier 58 v. Chr., Unterwerfung Galliens 51 v. Chr., Vorstoss bis zur Donau 15 v. Chr.). Eine gute Bewertung zeigt das Zusammenwirken: Der wirtschaftliche Zerfall schwächte die Oppida von innen, während militärischer Druck von aussen den Niedergang beschleunigte und schliesslich die römische Besetzung die Vorgeschichte beendete."
+    }
+  ],
+  "glossar": [
+    {
+      "begriff": "Eisenmetallurgie",
+      "definition": "Die Technik der Gewinnung und Verarbeitung von Eisen, die um 1200 v. Chr. in Kleinasien und Ägypten die Bronze-Technologie abzulösen begann und über Handelsnetze nach Europa gelangte."
+    },
+    {
+      "begriff": "Verhüttung",
+      "definition": "Der Prozess, bei dem Eisenerz in kaminartigen Lehm-Schmelzöfen mit Holzkohle bei 900–1200 °C erhitzt wurde, um metallisches Eisen von der Schlacke zu trennen."
+    },
+    {
+      "begriff": "Schlacke",
+      "definition": "Die nichtmetallischen Bestandteile des Erzes, die beim Schmelzen flüssig wurden und abflossen; Reste mussten durch wiederholtes Hämmern aus dem Eisen getrieben werden."
+    },
+    {
+      "begriff": "Eisenluppe",
+      "definition": "Ein schwammartiger Roheisenklumpen mit erheblichen Schlacke- und Holzkohleresten, der nach der Verhüttung in der Ofengrube zurückblieb und weiterverarbeitet werden musste."
+    },
+    {
+      "begriff": "Hallstatt-Kultur",
+      "definition": "Die frühe Eisenzeit Mitteleuropas (ca. 800–450 v. Chr.), benannt nach dem Fundort Hallstatt im Salzkammergut, geprägt durch Salzhandel, Fürstensitze und monumentale Grabhügel."
+    },
+    {
+      "begriff": "Weisses Gold",
+      "definition": "Bezeichnung für Salz, das in meeresfernen Gebieten knapp war, in Viehhaltung, Gerberei und Metallverarbeitung unverzichtbar wurde und auch als Zahlungsmittel diente."
+    },
+    {
+      "begriff": "Fibel",
+      "definition": "Eine verzierte Gewandnadel, Vorläufer der modernen Sicherheitsnadel, die die Kleidung zusammenhielt und erstmals in Mitteleuropa in Hallstattzeitlichen Gräbern auftaucht."
+    },
+    {
+      "begriff": "Fürstensitz",
+      "definition": "Befestigte Siedlung entlang der Handelswege, in der eine regionale Elite residierte und Luxusgüter wie griechische Keramik und Wein importierte."
+    },
+    {
+      "begriff": "Massalia",
+      "definition": "Um 600 v. Chr. gegründete griechische Kolonie (heutiges Marseille), von der aus der Grossteil des Weins über Rhonetal und Burgund in mitteleuropäische Zentren gelangte."
+    },
+    {
+      "begriff": "Indogermanen",
+      "definition": "Sprachgemeinschaft, deren gemeinsame Ursprache (Proto-Indoeuropäisch) auf Ähnlichkeiten von Griechisch, Latein, Sanskrit und germanischen Sprachen zurückgeführt wird; die Kelten zählen zu ihren westlichen Nachfahren."
+    },
+    {
+      "begriff": "Kurgan-Hypothese",
+      "definition": "Von Marija Gimbutas vertretene, heute vorherrschende These, die die indogermanische Urheimat in den pontisch-kaspischen Steppen lokalisiert und die Ausbreitung mit Pferdedomestizierung und Raderfindung erklärt."
+    },
+    {
+      "begriff": "La-Tène-Kultur",
+      "definition": "Ab dem 5. Jahrhundert v. Chr. auf die Hallstatt-Kultur folgende keltische Kultur, benannt nach dem Fundort La Tène am Neuenburgersee, wo rund 2500 Eisenobjekte als Opfergaben gefunden wurden."
+    },
+    {
+      "begriff": "Kelten",
+      "definition": "Die Menschen der La-Tène-Kultur; das erste Volk nördlich der Alpen, das in schriftlichen Quellen (Hekataios, Herodot) namentlich erwähnt wird."
+    },
+    {
+      "begriff": "Gallier / Helvetier",
+      "definition": "Bezeichnungen für die keltische Bevölkerung im heutigen Frankreich (Gallier) bzw. auf dem Gebiet der heutigen Schweiz (Helvetier), die kulturell derselben Gruppe angehörten."
+    },
+    {
+      "begriff": "Oppidum",
+      "definition": "Lateinischer Begriff (Plural: Oppida) für die keltischen stadtähnlichen Siedlungen, die als Knotenpunkte von Wirtschaft, Kult und Handwerk dienten und teils bäuerlich geprägt blieben."
+    },
+    {
+      "begriff": "Murus Gallicus",
+      "definition": "Von Caesar beschriebene keltische Befestigung: übereinander gestapelte, mit Steinen und Erde gefüllte Holzrahmen mit steinverkleideter Vorderseite."
+    },
+    {
+      "begriff": "Druiden",
+      "definition": "Leiter der keltischen Kulte, die zugleich Priester, Richter, Gelehrte und Lehrer waren, zur Oberschicht gehörten und Privilegien wie Steuer- und Militärbefreiung genossen."
+    },
+    {
+      "begriff": "Viereckschanze",
+      "definition": "Keltische quadratische Anlage aus dem 2. und 1. Jahrhundert v. Chr., deren Funktion (religiöser Kult oder Gutshof) unklar bleibt."
+    },
+    {
+      "begriff": "Keltischer Furor",
+      "definition": "Von antiken Autoren beschriebene Kampfeswut der Kelten, die vor der Schlacht durch Lärm, Drohungen und Kriegsgesänge geschürt wurde, um den Gegner einzuschüchtern."
+    }
+  ],
+  "bibliografie": [
+    {
+      "autor": "Kantonsschule (KSS)",
+      "titel": "Geschichte 2025/26 1IP – 3 Eisenzeit (1G-Eisenzeit.pdf)",
+      "jahr": "2025"
+    }
+  ],
+  "schlagwoerter": [
+    "Eisenzeit",
+    "Eisenmetallurgie",
+    "Verhüttung",
+    "Hallstatt-Kultur",
+    "Salzhandel",
+    "Kelten",
+    "La-Tène-Kultur",
+    "Oppida",
+    "Indogermanen",
+    "Kurgan-Hypothese",
+    "Druiden",
+    "Fürstensitze",
+    "Fernhandel",
+    "Grabhügel",
+    "Murus Gallicus",
+    "keltische Expansion",
+    "Helvetier",
+    "Gallier",
+    "Caesar",
+    "Bronze und Eisen"
+  ]
+}
