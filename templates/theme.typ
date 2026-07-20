@@ -58,10 +58,12 @@
   // Rubriken (Level 1) werden nummeriert; Unterebenen nicht.
   set heading(numbering: (..n) => if n.pos().len() == 1 { numbering("01", n.pos().first()) })
   show heading: set text(font: display-font, fill: ink)
-  show heading.where(level: 2): set text(size: 13pt)
-  show heading.where(level: 3): set text(size: 11.5pt)
+  show heading.where(level: 2): set text(size: 13pt, weight: "bold")
+  show heading.where(level: 3): set text(size: 11.5pt, style: "italic", fill: muted)
+  show heading.where(level: 4): set text(size: 11.5pt, weight: "bold")
   show heading.where(level: 2): it => block(above: 1.3em, below: 0.6em, it.body)
   show heading.where(level: 3): it => block(above: 1.1em, below: 0.5em, it.body)
+  show heading.where(level: 4): it => block(above: 1.0em, below: 0.45em, it.body)
   show heading.where(level: 1): it => context {
     let nr = counter(heading).display()
     pagebreak(weak: true)
@@ -142,11 +144,13 @@
 
 // ---- Ueberblick: Lernziele + Inhaltsverzeichnis ------------------------
 #let overview(objectives-body) = {
+  pagebreak(weak: true)
   objectives-box(objectives-body)
   v(1em)
   heading(level: 2, outlined: false, numbering: none)[Inhalt]
   show outline.entry: set text(font: sans-font, size: 10.5pt)
   outline(title: none, target: heading.where(level: 1), depth: 1)
+  pagebreak(weak: true)
 }
 
 // ---- Rubrik-Trenner ----------------------------------------------------
