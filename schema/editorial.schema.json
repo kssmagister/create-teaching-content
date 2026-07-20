@@ -18,8 +18,19 @@
         "fach": { "type": "string" },
         "stufe": { "type": "string", "description": "z. B. 'Gymnasium 11. Klasse'" },
         "dauer": { "type": "string" },
-        "cover_bild": { "type": "string", "description": "Dateiname relativ zum Unit-Ordner (PNG/JPG/SVG)." },
-        "cover_zeilen": { "type": "array", "items": { "type": "string" }, "maxItems": 4 }
+        "titelseite": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Vollflaechiges Titelbild mit Text-Overlay. Ohne 'bild' faellt das Cover auf ein einfaches zentriertes Textlayout zurueck.",
+          "properties": {
+            "bild": { "type": "string", "description": "Dateiname in units/<unit>/images/ (PNG/JPG)." },
+            "kicker": { "type": "string", "description": "Kurze Ueberzeile ueber den Titelzeilen, z. B. Fach/Schule." },
+            "zeilen": { "type": "array", "items": { "type": "string" }, "maxItems": 4, "description": "Grosse Titelzeilen, die auf dem Bild angezeigt werden." },
+            "autor": { "type": "string" },
+            "klasse": { "type": "string" },
+            "email": { "type": "string" }
+          }
+        }
       }
     },
 

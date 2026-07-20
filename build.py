@@ -71,12 +71,15 @@ def build_typst(data, variant, solutions, figures):
     L.append("")
 
     # --- Cover ---
+    titelseite = meta.get("titelseite", {})
     cimg = figures.get("__cover__")
     img_arg = f", bild: {tstr(cimg)}" if cimg else ""
     L.append(
         f'#cover(titel: {tstr(meta["titel"])}, fach: {tstr(meta.get("fach", ""))}, '
         f'stufe: {tstr(meta.get("stufe", ""))}, dauer: {tstr(meta.get("dauer", ""))}, '
-        f'zeilen: {tarr(meta.get("cover_zeilen", []))}, variant: {tstr(variant)}{img_arg})'
+        f'zeilen: {tarr(titelseite.get("zeilen", []))}, variant: {tstr(variant)}{img_arg}, '
+        f'kicker: {tstr(titelseite.get("kicker", ""))}, autor: {tstr(titelseite.get("autor", ""))}, '
+        f'klasse: {tstr(titelseite.get("klasse", ""))}, email: {tstr(titelseite.get("email", ""))})'
     )
     L.append("")
 
@@ -211,15 +214,15 @@ def copy_images(unit, data, out_dir):
     figures = {}
     img_dir = out_dir / "img"
     # Cover
-    cb = data["meta"].get("cover_bild")
+    cb = data["meta"].get("titelseite", {}).get("bild")
     if cb:
-        src = unit / cb
+        src = unit / "images" / cb
         if src.exists():
             dst = "cover" + src.suffix
             shutil.copyfile(src, out_dir / dst)
             figures["__cover__"] = dst
         else:
-            print(f"  [Warnung] cover_bild '{cb}' nicht gefunden.")
+            print(f"  [Warnung] Titelbild '{cb}' nicht gefunden (units/<unit>/images/).")
     # Figuren
     fig_names = [b["bild"] for b in data.get("haupttext", []) if b.get("typ") == "figur"]
     if fig_names:

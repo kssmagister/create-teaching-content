@@ -87,6 +87,29 @@
   </div>
 
   <div class="card">
+    <h2>Titelseite</h2>
+    <div class="muted" style="margin-bottom:8px">Vollflaechiges Titelbild mit Text-Overlay. Ohne Bild faellt das Cover auf ein einfaches Textlayout zurueck.</div>
+    <h3>Titelbild</h3>
+    <div id="cover-current" class="muted" style="margin-bottom:6px"></div>
+    <div class="row"><input type="file" id="up-cover" accept="image/*">
+      <button class="sm" onclick="uploadCover()">Hochladen &amp; setzen</button></div>
+    <h3>Ueberzeile (Kicker)</h3>
+    <input type="text" id="ts-kicker" placeholder="z. B. KSS (Vor-)Geschichte">
+    <h3>Titelzeilen &nbsp;<span class="muted">(eine pro Zeile, max. 4)</span></h3>
+    <textarea id="ts-zeilen" style="min-height:80px" placeholder="3 Eisenzeit&#10;3.1 Kelten"></textarea>
+    <h3>Autor</h3>
+    <input type="text" id="ts-autor" placeholder="z. B. Daniel Rutz">
+    <h3>Klasse</h3>
+    <input type="text" id="ts-klasse" placeholder="z. B. KSS 2025/26 – Klasse 1IP">
+    <h3>E-Mail</h3>
+    <input type="text" id="ts-email" placeholder="z. B. daniel.rutz@kantisargans.ch">
+    <div class="row" style="margin-top:10px">
+      <button onclick="saveTitelseite()">Titelseite speichern</button>
+    </div>
+    <div id="tsmsg"></div>
+  </div>
+
+  <div class="card">
     <h2>editorial.json</h2>
     <div class="row" style="margin-bottom:8px">
       <button id="btn-generate" class="ghost" onclick="generateEditorial()">Aus sources/ generieren (Claude)</button>
@@ -193,6 +216,67 @@ async function loadEditorial(){
   const t=await (await fetch(`/api/units/${current}/editorial`)).text();
   const el=document.getElementById('editor'); if(el){ try{ el.value=JSON.stringify(JSON.parse(t),null,2);}catch{ el.value=t; } }
   const m=document.getElementById('editmsg'); if(m) m.innerHTML='';
+  try{ loadTitelseiteForm(JSON.parse(t)); }catch{}
+}
+
+function loadTitelseiteForm(data){
+  const ts=(data.meta && data.meta.titelseite) || {};
+  const set=(id,v)=>{ const el=document.getElementById(id); if(el) el.value=v||''; };
+  set('ts-kicker', ts.kicker);
+  set('ts-zeilen', (ts.zeilen||[]).join('\n'));
+  set('ts-autor', ts.autor);
+  set('ts-klasse', ts.klasse);
+  set('ts-email', ts.email);
+  const cur=document.getElementById('cover-current');
+  if(cur) cur.textContent = ts.bild ? `Aktuell: ${ts.bild}` : 'Kein Titelbild gesetzt.';
+}
+
+async function saveTitelseite(){
+  const m=document.getElementById('tsmsg');
+  let data; try{ data=JSON.parse(document.getElementById('editor').value); }
+  catch(e){ m.className='msg err'; m.textContent='JSON-Syntaxfehler im editorial.json-Editor: '+e.message; return; }
+  data.meta = data.meta || {};
+  const prevBild = (data.meta.titelseite && data.meta.titelseite.bild) || undefined;
+  const zeilen = document.getElementById('ts-zeilen').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const ts = {
+    kicker: document.getElementById('ts-kicker').value.trim(),
+    zeilen,
+    autor: document.getElementById('ts-autor').value.trim(),
+    klasse: document.getElementById('ts-klasse').value.trim(),
+    email: document.getElementById('ts-email').value.trim(),
+  };
+  if(prevBild) ts.bild = prevBild;
+  Object.keys(ts).forEach(k=>{ if(!ts[k] || (Array.isArray(ts[k]) && !ts[k].length)) delete ts[k]; });
+  data.meta.titelseite = ts;
+  const r=await fetch(`/api/units/${current}/editorial`,{method:'PUT',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  const res=await r.json();
+  if(res.ok){ m.className='msg ok'; m.textContent='Titelseite gespeichert.'
+      + (res.warnings&&res.warnings.length?('\n'+res.warnings.join('\n')):''); await loadEditorial(); }
+  else { m.className='msg err'; m.textContent='Schema-Fehler:\n- '+res.errors.join('\n- '); }
+}
+
+async function uploadCover(){
+  const inp=document.getElementById('up-cover'); if(!inp.files.length) return;
+  const m=document.getElementById('tsmsg');
+  const fd=new FormData(); fd.append('files', inp.files[0]);
+  await fetch(`/api/units/${current}/upload?kind=images`,{method:'POST',body:fd});
+  let data; try{ data=JSON.parse(document.getElementById('editor').value); }
+  catch(e){ m.className='msg err'; m.textContent='Bild hochgeladen, aber editorial.json hat einen Syntaxfehler: '+e.message; inp.value=''; await refreshDetail(); return; }
+  data.meta = data.meta || {};
+  data.meta.titelseite = data.meta.titelseite || {};
+  data.meta.titelseite.bild = _safeUploadName(inp.files[0].name);
+  const r=await fetch(`/api/units/${current}/editorial`,{method:'PUT',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  const res=await r.json();
+  if(res.ok){ m.className='msg ok'; m.textContent='Titelbild hochgeladen & gesetzt.'; await loadEditorial(); }
+  else { m.className='msg err'; m.textContent='Bild hochgeladen, aber Speichern fehlgeschlagen:\n- '+res.errors.join('\n- '); }
+  inp.value=''; await refreshDetail();
+}
+
+function _safeUploadName(name){
+  name = name.split(/[\\/]/).pop();
+  return name.replace(/[^A-Za-z0-9._ \-]/g, '_').trim();
 }
 
 async function saveEditorial(){

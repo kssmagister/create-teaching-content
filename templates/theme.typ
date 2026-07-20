@@ -108,37 +108,61 @@
 #let prior-box(title: "Vorwissen aktivieren", body) = callout(title: title, fill: accent-soft, bar: accent, body)
 
 // ---- Cover -------------------------------------------------------------
-#let cover(titel: "", fach: "", stufe: "", dauer: "", zeilen: (), variant: "teacher", bild: none) = {
-  set page(header: none, footer: none)
-  v(2.3cm)
-  align(center)[
-    #text(font: sans-font, size: 10pt, fill: accent, tracking: 2pt)[UNTERRICHTSEINHEIT]
-    #v(0.7cm)
-    #text(font: display-font, size: 30pt, weight: "medium", fill: ink)[#titel]
-    #v(0.5cm)
-    #text(font: sans-font, size: 11pt, fill: muted)[
-      #fach #if stufe != "" [ · #stufe ] #if dauer != "" [ · #dauer ]
-    ]
-  ]
+// Mit 'bild': vollflaechiges Titelbild, Textzeilen oben links, Autor/Klasse/
+// E-Mail in einer Box unten rechts. Ohne 'bild': einfaches zentriertes
+// Textlayout (Fallback, falls keine Titelseite gestaltet wurde).
+#let cover(titel: "", fach: "", stufe: "", dauer: "", zeilen: (), variant: "teacher", bild: none,
+           kicker: "", autor: "", klasse: "", email: "") = {
   if bild != none {
-    v(1.1cm); align(center, box(width: 52%, image(bild, width: 100%))); v(1.0cm)
-  } else {
-    v(1.3cm); align(center, line(length: 28%, stroke: 0.6pt + line-grey)); v(1.3cm)
-  }
-  if zeilen.len() > 0 {
-    align(center)[
-      #for l in zeilen {
-        text(font: display-font, size: 13pt, style: "italic", fill: accent)[#l]
-        v(0.5cm, weak: true)
+    set page(header: none, footer: none, margin: 0pt,
+      background: image(bild, width: 100%, height: 100%, fit: "cover"))
+    place(top + left, dx: 2.3cm, dy: 2.3cm, block(width: 80%, {
+      if kicker != "" {
+        text(font: sans-font, size: 11pt, weight: "bold", fill: white, tracking: 1.6pt)[#upper(kicker)]
+        v(0.4em)
       }
+      for l in zeilen {
+        block(above: 0pt, below: 0.12em, text(font: sans-font, size: 30pt, weight: "bold", fill: white)[#l])
+      }
+    }))
+    if autor != "" or klasse != "" or email != "" {
+      place(bottom + right, dx: -1.6cm, dy: -1.6cm, block(
+        fill: white.transparentize(15%), inset: (x: 1em, y: 0.8em), radius: 3pt,
+        align(right, {
+          if autor != "" { text(font: sans-font, size: 10.5pt, weight: "bold", fill: ink)[#autor]; linebreak() }
+          if klasse != "" { text(font: sans-font, size: 9.5pt, fill: ink)[#klasse]; linebreak() }
+          if email != "" { text(font: sans-font, size: 9.5pt, fill: muted)[#email] }
+        }),
+      ))
+    }
+  } else {
+    set page(header: none, footer: none)
+    v(2.3cm)
+    align(center)[
+      #text(font: sans-font, size: 10pt, fill: accent, tracking: 2pt)[UNTERRICHTSEINHEIT]
+      #v(0.7cm)
+      #text(font: display-font, size: 30pt, weight: "medium", fill: ink)[#titel]
+      #v(0.5cm)
+      #text(font: sans-font, size: 11pt, fill: muted)[
+        #fach #if stufe != "" [ · #stufe ] #if dauer != "" [ · #dauer ]
+      ]
+    ]
+    v(1.3cm); align(center, line(length: 28%, stroke: 0.6pt + line-grey)); v(1.3cm)
+    if zeilen.len() > 0 {
+      align(center)[
+        #for l in zeilen {
+          text(font: display-font, size: 13pt, style: "italic", fill: accent)[#l]
+          v(0.5cm, weak: true)
+        }
+      ]
+    }
+    align(center + bottom)[
+      #v(1fr)
+      #text(font: sans-font, size: 9pt, fill: muted)[
+        #if variant == "student" [Schülerversion] else [Lehrerversion] · erstellt mit create-teaching-content
+      ]
     ]
   }
-  align(center + bottom)[
-    #v(1fr)
-    #text(font: sans-font, size: 9pt, fill: muted)[
-      #if variant == "student" [Schülerversion] else [Lehrerversion] · erstellt mit create-teaching-content
-    ]
-  ]
   pagebreak()
 }
 
