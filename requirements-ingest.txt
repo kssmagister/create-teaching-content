@@ -1,0 +1,4 @@
+# Nur fuer das separate ingest-Image (Dockerfile.ingest) -- bewusst getrennt
+# von requirements.txt, damit der Haupt-Container schlank bleibt (siehe
+# Dockerfile: "Bewusst OHNE Docling, das waere ein GB-schweres ML-Image").
+docling>=2.0

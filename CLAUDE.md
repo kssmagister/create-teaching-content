@@ -33,6 +33,8 @@ Wahrheit; andere Kopien nur via `git pull` nachziehen.
 ```
 create-teaching-content/
 ├── build.py                 ← CLI: editorial.json → PDF (validieren, Bilder, Typst)
+├── agent.py                 ← CLI: sources/ → editorial.json (Claude-API, gestuft)
+├── ingest.py                ← CLI: sources/* → Markdown (Docling, OCR); eigenes Image
 ├── schema/editorial.schema.json  ← Schema v2 (Reader-Modell), versioniert
 ├── src/
 │   ├── markup.py            ← Markdown→Typst (Escaping via Konvertierung, KEIN Sanitizer)
@@ -47,9 +49,11 @@ create-teaching-content/
 ├── units/<unit>/
 │   ├── editorial.json       ← generierter Content (Schema v2)
 │   ├── sources/             ← Rohmaterial (LLM-Input, wird NICHT gerendert)
+│   ├── sources/_originals/  ← von ingest.py archivierte Rohdateien (PDF/DOCX/…)
 │   ├── images/              ← Abbildungen (im JSON per Dateiname referenziert)
 │   └── out/                 ← generiert (main-*.typ, *.pdf); gitignored
-├── Dockerfile · docker-compose.yml · .env.example
+├── Dockerfile · docker-compose.yml · .env.example  ← Haupt-Container (schlank)
+├── Dockerfile.ingest · requirements-ingest.txt      ← separates Docling-Image
 └── README.md · PRD.md
 ```
 
@@ -86,6 +90,9 @@ uvicorn server.app:app --reload            # http://127.0.0.1:8000
 
 # Container (Server)
 docker compose up -d --build               # http://<server-im-tailnet>:8000
+
+# Ingestion (separates, schweres Docling-Image; nicht Teil von "up")
+docker compose --profile ingest run --rm ingest python ingest.py units/<unit> [--force]
 ```
 
 `--variant` (Lehrer/Schüler) und `--solutions` (Lösungs-Anhang) sind frei
@@ -121,16 +128,17 @@ kombinierbar; der Dateiname kodiert die Variante (z. B. `…-teacher-loesung.pdf
 
 **Fertig & verifiziert:** Schema v2 + Reader-Layout, Fonts gebündelt, CLI-Build,
 Docker-Container, FastAPI-Web-Schicht (Upload/Build/Download, Schema-Validierung).
-Beispiel-Unit `001-schweiz-2wk`.
 
-**Als Nächstes – Schritt 3: `agent.py` (LLM-Automatisierung, Claude-API):**
-- Modulare Prompts (Lernziele → Einleitung → Haupttext → Aufgaben …) statt eines
-  Monolithen; **`kontext.json`** als geteilter Zustand, damit sich Aufgaben auf den
-  *generierten* Haupttext beziehen (Grounding gegen Halluzination).
-- Backend Claude-API (`ANTHROPIC_API_KEY` aus `.env`); Modell: aktuelles Claude.
-- Ergebnis ist eine schema-valide `editorial.json`, die im UI **zur Prüfung
-  angezeigt** wird, bevor gebaut wird (menschliches Fakten-Gate bleibt).
-- Neuer Endpoint `POST /api/units/{unit}/generate` + Button in der UI.
+**Schritt 3 (`agent.py`, LLM-Automatisierung) ist fertig:** modulare Prompts
+(Lernziele → Vorwissen/Einleitung → Haupttext → Aufgaben → Glossar/Bibliografie),
+`kontext.json` als geteilter Zustand (Grounding gegen Halluzination), Claude-API
+Backend, Endpoint `POST /api/units/{unit}/generate` + Button in der UI.
 
-**Roadmap danach:** `ingest.py` (sources → Markdown via Pandoc/Docling),
-`export.py` (Pandoc DOCX/EPUB), Slides via Typst `touying`, Latein-Vokabelabgleich.
+**`ingest.py` (sources/ → Markdown via Docling) ist ebenfalls fertig:** eigenes,
+schweres Docker-Image (`Dockerfile.ingest`, Compose-Profil `ingest`, bewusst
+getrennt vom schlanken Haupt-Container), OCR für Scans/Fotos, mehr Formate
+(PDF/DOCX/PPTX/XLSX/HTML). Aufruf: `docker compose --profile ingest run --rm
+ingest python ingest.py units/<unit>`.
+
+**Roadmap danach:** `export.py` (Pandoc DOCX/EPUB), Slides via Typst `touying`,
+Latein-Vokabelabgleich.

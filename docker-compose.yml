@@ -15,3 +15,16 @@ services:
       # Fuer Schritt 3 (LLM-Automatisierung, Claude-API):
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
     restart: unless-stopped
+
+  # Separates, schweres Image fuer ingest.py (Docling: Torch/OCR). Bewusst
+  # NICHT Teil von "docker compose up" -- Profil haelt es dort raus, gezielter
+  # Aufruf via:
+  #   docker compose --profile ingest run --rm ingest python ingest.py units/<unit>
+  ingest:
+    build:
+      context: .
+      dockerfile: Dockerfile.ingest
+    image: create-teaching-content-ingest
+    volumes:
+      - ./units:/app/units
+    profiles: ["ingest"]

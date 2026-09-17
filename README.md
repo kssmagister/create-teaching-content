@@ -26,7 +26,8 @@ Es gibt **keinen** vollautomatischen Knopfdruck – über ein Web-Abo lässt sic
 ein LLM nicht programmatisch aufrufen. Der Ablauf ist bewusst schlank:
 
 1. **Material sammeln** → Quelltexte nach `units/<unit>/sources/` legen
-   (Markdown/Text; PDFs/DOCX vorab z. B. mit Docling/Pandoc zu Markdown wandeln).
+   (Markdown/Text direkt; PDFs/DOCX/PPTX/HTML/Scans vorab mit `ingest.py`
+   zu Markdown wandeln, siehe [Ingestion](#ingestion-ingestpy) unten).
 2. **Editorial-Schritt** → Prompt aus [`prompts/editorial.md`](prompts/editorial.md)
    + Material in ein LLM geben, Ausgabe als `units/<unit>/editorial.json` speichern.
 3. **Bilder** → allfällige Abbildungen nach `units/<unit>/images/` legen (im JSON
@@ -132,7 +133,8 @@ docker compose up -d --build
 
 Der Container enthält Typst + die gebündelten Fonts; `./units` ist ein
 **Volume** und bleibt ein Git-Repo auf dem Host (Snapshots überleben Rebuilds).
-Docling bleibt bewusst draußen (sonst GB-Image).
+Docling bleibt bewusst draußen (sonst GB-Image) – dafür gibt es den separaten
+`ingest`-Service, siehe [Ingestion](#ingestion-ingestpy).
 
 **Die Web-Oberfläche kann:** Einheiten anlegen/auswählen · `sources/` und
 `images/` per Upload verwalten · `editorial.json` bearbeiten **mit
@@ -172,6 +174,31 @@ fachliche/didaktische Prüfung:
   Gesamtverträge für den Unterrichtsgebrauch abgesichert. Die `bibliografie`
   und die Quellenangaben bei Abbildungen dienen der korrekten Attribution; sie
   decken *deinen Klasseneinsatz*, nicht zwingend eine Weitergabe darüber hinaus.
+
+---
+
+## Ingestion (`ingest.py`)
+
+Wandelt `units/<unit>/sources/*` (PDF, DOCX, PPTX, XLSX, HTML, Fotos/Scans)
+mit **Docling** zu Markdown-Dateien, die man vor dem eigentlichen
+Editorial-Schritt ansehen/korrigieren kann (zusätzliches Fakten-Gate). Docling
+bringt OCR mit, funktioniert also auch bei gescannten PDFs/fotografierten
+Seiten – anders als `agent.py`s eingebaute, einfache Parser.
+
+Läuft bewusst in einem eigenen, schweren Docker-Image (Torch/OCR-Modelle),
+nicht im Haupt-Container:
+
+```bash
+docker compose --profile ingest run --rm ingest python ingest.py units/<unit>
+```
+
+Für jede konvertierbare Datei entsteht `sources/<name>.md`; das Original
+wandert nach `sources/_originals/<name>` (bleibt im Git-Repo, wird von
+`agent.py` aber nicht mehr gelesen – es sieht nur noch die bessere
+Markdown-Version). Bereits konvertierte Dateien werden bei erneutem Lauf
+übersprungen, `--force` erzwingt eine Neukonvertierung. Nicht unterstützte
+Formate (z. B. ODT, RTF) werden übersprungen und gemeldet – dafür Pandoc
+nutzen, siehe unten.
 
 ---
 

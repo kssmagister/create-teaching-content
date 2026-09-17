@@ -62,8 +62,10 @@ editorial.json (Vertrag, schema-validiert)
 - [x] Docker-Container (Typst + Fonts + Web-Schicht), `docker-compose`
 - [x] Dünne FastAPI-Oberfläche: Units/Dateien verwalten, Build auslösen, PDF liefern
       (Single-User hinter Tailscale)
-- [ ] LLM-Automatisierung `agent.py` (Claude-API) + `kontext.json` (Steuerungsinstanz)
-- [ ] Ingestion `ingest.py`: `sources/` (PDF/DOCX/HTML) → Markdown (Pandoc/Docling)
+- [x] LLM-Automatisierung `agent.py` (Claude-API) + `kontext.json` (Steuerungsinstanz)
+- [x] Ingestion `ingest.py`: `sources/` (PDF/DOCX/PPTX/XLSX/HTML/Scans) →
+      Markdown via Docling, separates Image (`Dockerfile.ingest`, Compose-
+      Profil `ingest`)
 - [ ] Pandoc-Export (Markdown/HTML → DOCX, EPUB) als `export.py`
 
 **Phase 3**

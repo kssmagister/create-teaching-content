@@ -1,0 +1,20 @@
+# create-teaching-content -- separates Ingest-Image (Docling).
+# Bewusst getrennt vom Haupt-Dockerfile: Docling zieht Torch/OCR-Modelle nach
+# sich (GB-schweres Image) und wird nur bei Bedarf gebaut/gestartet
+# (docker-compose.yml Service "ingest", Profil "ingest").
+FROM python:3.12-slim
+
+# Laufzeit-Abhaengigkeiten fuer opencv/EasyOCR auf Debian-Slim.
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends libgl1 libglib2.0-0 \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements-ingest.txt .
+RUN pip install --no-cache-dir -r requirements-ingest.txt
+
+COPY ingest.py .
+
+# Kein CMD: gezielt aufgerufen ueber
+#   docker compose --profile ingest run --rm ingest python ingest.py units/<unit>
