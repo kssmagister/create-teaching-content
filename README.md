@@ -185,8 +185,14 @@ Editorial-Schritt ansehen/korrigieren kann (zusätzliches Fakten-Gate). Docling
 bringt OCR mit, funktioniert also auch bei gescannten PDFs/fotografierten
 Seiten – anders als `agent.py`s eingebaute, einfache Parser.
 
+**Im Web-Interface:** Button „sources/ konvertieren (ingest.py)" in der
+Dateien-Karte. Der Webserver startet dafür `ingest.py` über den gemounteten
+Docker-Socket als eigenen Container (Docling bleibt trotzdem im separaten,
+schweren Image – siehe `docker-compose.yml`-Kommentar zum Socket-Mount).
+
 Läuft bewusst in einem eigenen, schweren Docker-Image (Torch/OCR-Modelle),
-nicht im Haupt-Container:
+nicht im Haupt-Container. Terminal-Fallback (z. B. auf einem System ohne
+Docker-Socket-Zugriff):
 
 ```bash
 docker compose --profile ingest run --rm ingest python ingest.py units/<unit>
@@ -204,7 +210,9 @@ nutzen, siehe unten.
 
 ## Andere Ausgabeformate (`export.py`, Pandoc)
 
-Neben PDF (Typst) gibt es weitere Formate über **Pandoc**:
+Neben PDF (Typst) gibt es weitere Formate über **Pandoc**. Im Web-Interface:
+Format-Auswahl (DOCX/EPUB/ODT) + „Exportieren"-Button in der „PDF bauen"-
+Karte, nutzt dieselbe Lehrer/Schüler-/Lösungen-Auswahl. Terminal-Fallback:
 
 ```bash
 python export.py units/001-schweiz-2wk                          # DOCX (Standard)

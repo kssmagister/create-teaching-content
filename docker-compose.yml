@@ -11,9 +11,19 @@ services:
     volumes:
       # Units bleiben ein Git-Repo auf dem Host -> Snapshots ueberleben Rebuilds.
       - ./units:/app/units
+      # Docker-Socket: der Webserver startet ingest.py als Sibling-Container
+      # (Docker-outside-of-Docker) auf dem Host-Daemon. ACHTUNG: das gibt dem
+      # ctc-Container volle Kontrolle ueber den Host-Docker (de facto
+      # root-aequivalent auf dem Host) -- hier vertretbar, da Single-User-Tool
+      # hinter Tailscale ohne oeffentlichen Zugriff.
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       # Fuer Schritt 3 (LLM-Automatisierung, Claude-API):
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      # Absoluter Host-Pfad dieses Projekts, siehe .env.example -- noetig,
+      # damit "docker run -v ..." (ingest.py-Aufruf) Host-Pfade statt
+      # Container-Pfade an den Daemon schickt.
+      - HOST_PROJECT_DIR=${HOST_PROJECT_DIR:-}
     restart: unless-stopped
 
   # Separates, schweres Image fuer ingest.py (Docling: Torch/OCR). Bewusst

@@ -124,7 +124,12 @@ kombinierbar; der Dateiname kodiert die Variante (z. B. `…-teacher-loesung.pdf
 - **Evidenzbasis:** `geprueft: true` wird ohne Warnhinweis gedruckt, sonst ⚠.
 - **Urheberrecht:** Nutzer ist kantonale Lehrperson → Gesamtverträge decken den
   Unterrichtsgebrauch. `bibliografie`/Bildquellen dienen der Attribution.
-- **Secrets:** `.env` (gitignored) für `ANTHROPIC_API_KEY`; `.env.example` als Vorlage.
+- **Secrets:** `.env` (gitignored) für `ANTHROPIC_API_KEY` und `HOST_PROJECT_DIR`;
+  `.env.example` als Vorlage.
+- **Docker-Socket gemountet (`ctc` → `/var/run/docker.sock`):** ermöglicht den
+  Ingest-Button im UI (Sibling-Container-Start), gibt dem Container damit aber
+  faktisch root-äquivalente Kontrolle über den Host-Docker. Nur vertretbar,
+  weil Single-User-Tool hinter Tailscale ohne öffentlichen Zugriff.
 
 ---
 
@@ -141,12 +146,17 @@ Backend, Endpoint `POST /api/units/{unit}/generate` + Button in der UI.
 **`ingest.py` (sources/ → Markdown via Docling) ist ebenfalls fertig:** eigenes,
 schweres Docker-Image (`Dockerfile.ingest`, Compose-Profil `ingest`, bewusst
 getrennt vom schlanken Haupt-Container), OCR für Scans/Fotos, mehr Formate
-(PDF/DOCX/PPTX/XLSX/HTML). Aufruf: `docker compose --profile ingest run --rm
-ingest python ingest.py units/<unit>`.
+(PDF/DOCX/PPTX/XLSX/HTML). **Im UI per Button** (Endpoint
+`POST /api/units/{unit}/ingest`) – der Webserver startet dafür `ingest.py`
+als Sibling-Container über den gemounteten Host-Docker-Socket
+(Docker-outside-of-Docker, `HOST_PROJECT_DIR` aus `.env` für korrekte
+Host-Pfade bei Bind-Mounts). Terminal-Fallback: `docker compose --profile
+ingest run --rm ingest python ingest.py units/<unit>`.
 
 **`export.py` (editorial.json → DOCX/EPUB/ODT via Pandoc) ist ebenfalls
 fertig:** läuft im Haupt-Container (Pandoc ist ein schlankes Binary, anders
 als Docling); baut die gleiche Dramaturgie wie `build.py` als Markdown und
-kompiliert damit.
+kompiliert damit. **Im UI per Button** (Endpoint
+`POST /api/units/{unit}/export`, Download über `GET .../out/{name}`).
 
 **Roadmap danach:** Slides via Typst `touying`, Latein-Vokabelabgleich.

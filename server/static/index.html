@@ -14,6 +14,7 @@
        color:var(--ink);background:var(--bg);line-height:1.5}
   header{background:var(--accent);color:#fff;padding:14px 20px}
   header h1{margin:0;font-size:18px;font-weight:600;letter-spacing:.3px}
+  header .tagline{font-size:12.5px;opacity:.9;margin-top:4px}
   header .status{font-size:12px;opacity:.85;margin-top:2px}
   .wrap{max-width:1000px;margin:0 auto;padding:16px;display:grid;
         grid-template-columns:260px 1fr;gap:16px}
@@ -21,12 +22,19 @@
   .card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:14px}
   h2{font-size:14px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin:0 0 10px}
   h3{font-size:13px;color:var(--muted);margin:14px 0 6px}
+  #u-title{font-size:20px;text-transform:none;letter-spacing:0;color:var(--ink);
+            margin:4px 0 14px;font-weight:700}
+  .step{display:inline-flex;align-items:center;justify-content:center;
+        width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;
+        font-size:11px;margin-right:6px;text-transform:none;letter-spacing:normal;
+        font-weight:700;vertical-align:middle}
   button{font:inherit;background:var(--accent);color:#fff;border:0;border-radius:6px;
          padding:8px 12px;cursor:pointer}
   button.ghost{background:#fff;color:var(--accent);border:1px solid var(--accent)}
   button.sm{padding:4px 8px;font-size:12px}
   button:disabled{opacity:.5;cursor:default}
-  input[type=text]{font:inherit;padding:8px;border:1px solid var(--line);border-radius:6px;width:100%}
+  input[type=text],select{font:inherit;padding:8px;border:1px solid var(--line);border-radius:6px}
+  input[type=text]{width:100%}
   ul.list{list-style:none;margin:0;padding:0}
   ul.list li{padding:6px 8px;border-radius:6px;display:flex;justify-content:space-between;
              align-items:center;gap:8px}
@@ -45,16 +53,28 @@
   .muted{color:var(--muted);font-size:13px}
   a.pdf{color:var(--accent);text-decoration:none;font-size:13px}
   .hidden{display:none}
+  .hint{background:var(--accent-soft);border-left:3px solid var(--accent);font-size:12.5px;
+        border-radius:4px;padding:8px 10px;margin:0 0 10px;color:var(--ink)}
+  ol.steps{margin:0;padding-left:20px;font-size:13px}
+  ol.steps li{margin-bottom:6px}
+  details{margin-top:12px;font-size:13px}
+  details summary{cursor:pointer;color:var(--accent);font-weight:600}
+  details[open] summary{margin-bottom:8px}
+  .tool{margin-top:8px}
+  .tool code{display:block;background:var(--bg);border:1px solid var(--line);border-radius:6px;
+             padding:6px 8px;margin-top:4px;font-family:ui-monospace,Consolas,monospace;
+             font-size:11.5px;white-space:pre-wrap;word-break:break-all}
 </style>
 </head>
 <body>
 <header>
   <h1>create-teaching-content</h1>
+  <div class="tagline">Erzeugt aus deinem Rohmaterial druckfertige Unterrichtseinheiten (PDF, Lehrer-/Schülerversion, mit Lösungen)</div>
   <div class="status" id="status">…</div>
 </header>
 
 <div class="wrap">
-  <!-- Sidebar: Units -->
+  <!-- Sidebar: Units + Kurzanleitung -->
   <div>
     <div class="card">
       <h2>Einheiten</h2>
@@ -65,35 +85,104 @@
         <button class="sm" onclick="createUnit()">+</button>
       </div>
     </div>
+
+    <div class="card">
+      <h2>Ablauf</h2>
+      <ol class="steps">
+        <li>Material sammeln → <b>sources/</b> hochladen (Texte, PDFs, Bilder)</li>
+        <li><b>editorial.json</b> erzeugen (Button) oder von Hand schreiben</li>
+        <li>Ergebnis <b>inhaltlich prüfen</b> – kein automatischer Fakten-Check!</li>
+        <li>Titelseite gestalten <span class="muted">(optional)</span></li>
+        <li>PDF bauen</li>
+      </ol>
+      <details>
+        <summary>Terminal-Befehle (Fallback)</summary>
+        <div class="muted" style="margin-bottom:6px">ingest.py und export.py
+          gibt es auch als Buttons direkt in den Karten rechts – diese
+          Befehle sind nur ein Fallback, z. B. wenn der Docker-Socket auf
+          einem System mal nicht verfügbar ist.</div>
+        <div class="tool">
+          <b>ingest.py</b> – wandelt Scans/Fotos (OCR) und weitere Formate
+          (PPTX, XLSX, HTML) in <b>sources/</b> zu Markdown. Auf dem Server,
+          im Projektordner:
+          <code>docker compose --profile ingest run --rm ingest python ingest.py units/&lt;einheit&gt;</code>
+        </div>
+        <div class="tool">
+          <b>export.py</b> – erzeugt statt PDF ein Word/EPUB/ODT-Dokument.
+          Auf dem Server, im Projektordner:
+          <code>docker exec ctc python export.py units/&lt;einheit&gt; --format docx</code>
+        </div>
+      </details>
+    </div>
   </div>
 
   <!-- Main -->
   <div id="main">
-    <div class="card"><span class="muted">Wähle links eine Einheit oder lege eine neue an.</span></div>
+    <div class="card"><span class="muted">Wähle links eine Einheit oder lege eine neue an. Der Ablauf ist links in der Kurzanleitung beschrieben.</span></div>
   </div>
 </div>
 
 <template id="tpl-unit">
+  <h2 id="u-title"></h2>
+
   <div class="card">
-    <h2 id="u-title"></h2>
-    <div class="row">
-      <label class="chk"><input type="radio" name="variant" value="teacher" checked> Lehrer</label>
-      <label class="chk"><input type="radio" name="variant" value="student"> Schüler</label>
-      <label class="chk"><input type="checkbox" id="sol"> Lösungen</label>
-      <button id="btn-build" onclick="buildUnit()">PDF bauen</button>
+    <h2><span class="step">1</span> Dateien</h2>
+    <div class="hint">Lege hier dein Rohmaterial ab. <b>sources/</b> ist der
+      Input für die Generierung (Schritt 2), <b>images/</b> enthält
+      Abbildungen, die du in <b>editorial.json</b> per Dateiname referenzierst.</div>
+    <h3>sources/ &nbsp;<span class="muted">(Rohmaterial, LLM-Input)</span></h3>
+    <ul class="list files" id="sources"></ul>
+    <div class="row"><input type="file" id="up-sources" multiple>
+      <button class="sm" onclick="uploadFiles('sources')">Hochladen</button></div>
+    <div class="row" style="margin-top:8px">
+      <button id="btn-ingest" class="sm ghost" onclick="ingestSources()">sources/ konvertieren (ingest.py)</button>
+      <span class="muted">Für Scans/Fotos ohne Textebene (OCR) und weitere
+        Formate (PPTX, XLSX, HTML) → Markdown. Kann beim ersten Mal einige
+        Minuten dauern (OCR-Modelle werden geladen).</span>
     </div>
-    <div id="buildmsg"></div>
-    <div id="pdfs"></div>
+    <div id="ingestmsg"></div>
+    <h3>images/ &nbsp;<span class="muted">(Abbildungen)</span></h3>
+    <ul class="list files" id="images"></ul>
+    <div class="row"><input type="file" id="up-images" multiple>
+      <button class="sm" onclick="uploadFiles('images')">Hochladen</button></div>
   </div>
 
   <div class="card">
-    <h2>Titelseite</h2>
-    <div class="muted" style="margin-bottom:8px">Vollflaechiges Titelbild mit Text-Overlay. Ohne Bild faellt das Cover auf ein einfaches Textlayout zurueck.</div>
+    <h2><span class="step">2</span> editorial.json</h2>
+    <div class="row" style="margin-bottom:8px">
+      <button id="btn-generate" class="ghost" onclick="generateEditorial()">Aus sources/ generieren (Claude)</button>
+    </div>
+    <div class="hint">Erzeugt <b>editorial.json</b> automatisch aus
+      <b>sources/</b> (vorherige Version wird als
+      <b>editorial.json.bak</b> gesichert). Ergebnis unten danach immer
+      <b>inhaltlich prüfen</b> – es gibt keinen automatischen Fakten-Check.</div>
+    <div id="genmsg"></div>
+    <div class="row" style="margin-bottom:8px">
+      <input type="file" id="up-haupttext" accept=".md,.markdown,text/markdown">
+      <button class="sm ghost" onclick="uploadHaupttext()">Haupttext aus Markdown ersetzen</button>
+    </div>
+    <div class="muted" style="margin-bottom:8px">Alternative zu „generieren": ein
+      bereits fertig gegliederter Text (eigene Überschriften). Ersetzt nur
+      den Haupttext, der Rest von editorial.json bleibt erhalten.</div>
+    <div id="htmsg"></div>
+    <textarea id="editor" spellcheck="false"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button onclick="saveEditorial()">Validieren &amp; speichern</button>
+      <button class="ghost" onclick="loadEditorial()">Neu laden</button>
+    </div>
+    <div id="editmsg"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="step">3</span> Titelseite <span class="muted" style="text-transform:none">(optional)</span></h2>
+    <div class="hint">Vollflächiges Titelbild mit Text-Overlay. Ohne Bild
+      fällt das Cover automatisch auf ein einfaches Textlayout zurück –
+      dieser Schritt kann übersprungen werden.</div>
     <h3>Titelbild</h3>
     <div id="cover-current" class="muted" style="margin-bottom:6px"></div>
     <div class="row"><input type="file" id="up-cover" accept="image/*">
       <button class="sm" onclick="uploadCover()">Hochladen &amp; setzen</button></div>
-    <h3>Ueberzeile (Kicker)</h3>
+    <h3>Überzeile (Kicker)</h3>
     <input type="text" id="ts-kicker" placeholder="z. B. KSS (Vor-)Geschichte">
     <h3>Titelzeilen &nbsp;<span class="muted">(eine pro Zeile, max. 4)</span></h3>
     <textarea id="ts-zeilen" style="min-height:80px" placeholder="3 Eisenzeit&#10;3.1 Kelten"></textarea>
@@ -110,36 +199,31 @@
   </div>
 
   <div class="card">
-    <h2>editorial.json</h2>
-    <div class="row" style="margin-bottom:8px">
-      <button id="btn-generate" class="ghost" onclick="generateEditorial()">Aus sources/ generieren (Claude)</button>
-      <span class="muted">Ueberschreibt editorial.json (Sicherung: editorial.json.bak). Ergebnis vor dem Bauen pruefen!</span>
+    <h2><span class="step">4</span> PDF bauen</h2>
+    <div class="hint"><b>Lehrer</b>-Version enthält Lehrerhinweise und
+      Evidenzbasis, <b>Schüler</b>-Version nicht. „Lösungen" hängt
+      unabhängig davon einen Lösungsanhang an – beliebig kombinierbar.</div>
+    <div class="row">
+      <label class="chk"><input type="radio" name="variant" value="teacher" checked> Lehrer</label>
+      <label class="chk"><input type="radio" name="variant" value="student"> Schüler</label>
+      <label class="chk"><input type="checkbox" id="sol"> Lösungen</label>
+      <button id="btn-build" onclick="buildUnit()">PDF bauen</button>
     </div>
-    <div id="genmsg"></div>
-    <div class="row" style="margin-bottom:8px">
-      <input type="file" id="up-haupttext" accept=".md,.markdown,text/markdown">
-      <button class="sm ghost" onclick="uploadHaupttext()">Haupttext aus Markdown ersetzen</button>
-      <span class="muted">Fuer bereits fertig gegliederten Text (eigene Ueberschriften). Ersetzt nur `haupttext`, Rest bleibt erhalten.</span>
-    </div>
-    <div id="htmsg"></div>
-    <textarea id="editor" spellcheck="false"></textarea>
-    <div class="row" style="margin-top:8px">
-      <button onclick="saveEditorial()">Validieren &amp; speichern</button>
-      <button class="ghost" onclick="loadEditorial()">Neu laden</button>
-    </div>
-    <div id="editmsg"></div>
-  </div>
+    <div id="buildmsg"></div>
+    <div id="pdfs"></div>
 
-  <div class="card">
-    <h2>Dateien</h2>
-    <h3>sources/ &nbsp;<span class="muted">(Rohmaterial, LLM-Input)</span></h3>
-    <ul class="list files" id="sources"></ul>
-    <div class="row"><input type="file" id="up-sources" multiple>
-      <button class="sm" onclick="uploadFiles('sources')">Hochladen</button></div>
-    <h3>images/ &nbsp;<span class="muted">(Abbildungen)</span></h3>
-    <ul class="list files" id="images"></ul>
-    <div class="row"><input type="file" id="up-images" multiple>
-      <button class="sm" onclick="uploadFiles('images')">Hochladen</button></div>
+    <h3>Andere Formate &nbsp;<span class="muted">(export.py, statt PDF)</span></h3>
+    <div class="row">
+      <select id="exportFormat">
+        <option value="docx">Word (.docx)</option>
+        <option value="epub">EPUB (.epub)</option>
+        <option value="odt">OpenDocument (.odt)</option>
+      </select>
+      <button class="ghost" onclick="exportUnit()">Exportieren</button>
+    </div>
+    <div class="muted" style="margin-top:6px">Nutzt dieselbe Lehrer/Schüler-
+      und Lösungen-Auswahl wie oben.</div>
+    <div id="exportmsg"></div>
   </div>
 </template>
 
@@ -323,6 +407,34 @@ async function uploadHaupttext(){
     m.textContent='Fehler:\n- '+(res.errors||[res.detail||'Unbekannter Fehler']).join('\n- ');
   }
   inp.value='';
+}
+
+async function ingestSources(){
+  const btn=document.getElementById('btn-ingest'); btn.disabled=true; btn.textContent='konvertiert …';
+  const m=document.getElementById('ingestmsg'); m.innerHTML='';
+  const r=await fetch(`/api/units/${current}/ingest`,{method:'POST'});
+  const res=await r.json();
+  if(res.ok){ m.innerHTML='<div class="msg ok">sources/ konvertiert.</div>'; }
+  else { m.innerHTML=`<div class="msg err">Konvertierung fehlgeschlagen.</div>`; }
+  if(res.log) m.innerHTML+=`<div class="log">${res.log}</div>`;
+  btn.disabled=false; btn.textContent='sources/ konvertieren (ingest.py)';
+  refreshDetail();
+}
+
+async function exportUnit(){
+  const format=document.getElementById('exportFormat').value;
+  const variant=document.querySelector('input[name=variant]:checked').value;
+  const solutions=document.getElementById('sol').checked;
+  const m=document.getElementById('exportmsg'); m.innerHTML='exportiert …';
+  const r=await fetch(`/api/units/${current}/export`,{method:'POST',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify({format,variant,solutions})});
+  const res=await r.json();
+  if(res.ok){
+    m.innerHTML=`<div class="msg ok">Fertig: <a class="pdf" href="/api/units/${current}/out/${encodeURIComponent(res.file)}" target="_blank">↧ ${res.file}</a></div>`;
+  } else {
+    m.innerHTML=`<div class="msg err">Export fehlgeschlagen.</div>`;
+  }
+  if(res.log) m.innerHTML+=`<div class="log">${res.log}</div>`;
 }
 
 async function buildUnit(){

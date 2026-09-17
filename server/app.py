@@ -25,6 +25,14 @@ from src.markup import split_haupttext_md  # noqa: E402
 
 app = FastAPI(title="create-teaching-content")
 
+INGEST_IMAGE = "create-teaching-content-ingest"
+EXPORT_MEDIA_TYPES = {
+    "pdf": "application/pdf",
+    "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "epub": "application/epub+zip",
+    "odt": "application/vnd.oasis.opendocument.text",
+}
+
 SLUG = re.compile(r"^[A-Za-z0-9._-]+$")
 EDITORIAL_SKELETON = {
     "schema_version": "2.0",
@@ -238,6 +246,65 @@ def get_pdf(unit: str, name: str):
     if not p.exists() or p.suffix != ".pdf":
         raise HTTPException(404, "PDF nicht gefunden.")
     return FileResponse(p, media_type="application/pdf", filename=name)
+
+
+# ---- Ingestion (ingest.py, Docling per Docker-outside-of-Docker) -------
+@app.post("/api/units/{unit}/ingest")
+def ingest_unit(unit: str):
+    """Startet ingest.py als Sibling-Container ueber den gemounteten
+    Docker-Socket (Docling laeuft bewusst in einem separaten, schweren
+    Image, siehe docker-compose.yml/Dockerfile.ingest). Der Mount-Pfad muss
+    Host-absolut sein, da der Docker-Daemon Bind-Mounts gegen den Host
+    aufloest, nicht gegen die Sicht dieses Containers."""
+    d = _unit_dir(unit)
+    if not _list(d / "sources"):
+        raise HTTPException(400, "Keine Dateien in sources/ - zuerst Rohmaterial hochladen.")
+    host_dir = os.environ.get("HOST_PROJECT_DIR")
+    if not host_dir:
+        raise HTTPException(500, "HOST_PROJECT_DIR ist nicht gesetzt (.env pruefen).")
+    cmd = ["docker", "run", "--rm", "-v", f"{host_dir}/units:/app/units",
+           INGEST_IMAGE, "python", "ingest.py", f"units/{unit}"]
+    try:
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+    except FileNotFoundError:
+        raise HTTPException(500, "'docker' nicht gefunden (Docker-CLI fehlt im Image).")
+    except subprocess.TimeoutExpired:
+        return {"ok": False, "log": "Zeitlimit (10 Min.) ueberschritten."}
+    return {"ok": res.returncode == 0, "log": (res.stdout + res.stderr).strip()}
+
+
+# ---- Export (export.py, Pandoc) -----------------------------------------
+@app.post("/api/units/{unit}/export")
+def export_unit(unit: str, payload: dict = Body(default={})):
+    d = _unit_dir(unit)
+    fmt = payload.get("format", "docx")
+    variant = payload.get("variant", "teacher")
+    solutions = bool(payload.get("solutions", False))
+    if fmt not in ("docx", "epub", "odt"):
+        raise HTTPException(400, "format muss 'docx', 'epub' oder 'odt' sein.")
+    if variant not in ("teacher", "student"):
+        raise HTTPException(400, "variant muss 'teacher' oder 'student' sein.")
+    cmd = [sys.executable, str(ROOT / "export.py"), f"units/{unit}",
+           "--format", fmt, "--variant", variant]
+    if solutions:
+        cmd.append("--solutions")
+    res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
+    suffix = variant + ("-loesung" if solutions else "")
+    name = f"{unit}-{suffix}.{fmt}"
+    ok = res.returncode == 0 and (d / "out" / name).exists()
+    return {"ok": ok, "file": name if ok else None, "log": (res.stdout + res.stderr).strip()}
+
+
+@app.get("/api/units/{unit}/out/{name}")
+def get_out_file(unit: str, name: str):
+    """Download fuer export.py-Ausgaben (DOCX/EPUB/ODT); PDFs bleiben ueber
+    /pdf/{name} erreichbar."""
+    d = _unit_dir(unit)
+    p = d / "out" / _safe_name(name)
+    ext = p.suffix.lstrip(".")
+    if not p.exists() or ext not in EXPORT_MEDIA_TYPES:
+        raise HTTPException(404, "Datei nicht gefunden.")
+    return FileResponse(p, media_type=EXPORT_MEDIA_TYPES[ext], filename=name)
 
 
 # Statische Assets (optional, falls spaeter benoetigt)
