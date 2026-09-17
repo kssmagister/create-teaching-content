@@ -35,6 +35,7 @@ create-teaching-content/
 ├── build.py                 ← CLI: editorial.json → PDF (validieren, Bilder, Typst)
 ├── agent.py                 ← CLI: sources/ → editorial.json (Claude-API, gestuft)
 ├── ingest.py                ← CLI: sources/* → Markdown (Docling, OCR); eigenes Image
+├── export.py                ← CLI: editorial.json → DOCX/EPUB/ODT (Pandoc, im Haupt-Container)
 ├── schema/editorial.schema.json  ← Schema v2 (Reader-Modell), versioniert
 ├── src/
 │   ├── markup.py            ← Markdown→Typst (Escaping via Konvertierung, KEIN Sanitizer)
@@ -93,6 +94,9 @@ docker compose up -d --build               # http://<server-im-tailnet>:8000
 
 # Ingestion (separates, schweres Docling-Image; nicht Teil von "up")
 docker compose --profile ingest run --rm ingest python ingest.py units/<unit> [--force]
+
+# Export (Pandoc, im Haupt-Container)
+python export.py units/<unit> [--format docx|epub|odt] [--variant teacher|student] [--solutions] [--open]
 ```
 
 `--variant` (Lehrer/Schüler) und `--solutions` (Lösungs-Anhang) sind frei
@@ -140,5 +144,9 @@ getrennt vom schlanken Haupt-Container), OCR für Scans/Fotos, mehr Formate
 (PDF/DOCX/PPTX/XLSX/HTML). Aufruf: `docker compose --profile ingest run --rm
 ingest python ingest.py units/<unit>`.
 
-**Roadmap danach:** `export.py` (Pandoc DOCX/EPUB), Slides via Typst `touying`,
-Latein-Vokabelabgleich.
+**`export.py` (editorial.json → DOCX/EPUB/ODT via Pandoc) ist ebenfalls
+fertig:** läuft im Haupt-Container (Pandoc ist ein schlankes Binary, anders
+als Docling); baut die gleiche Dramaturgie wie `build.py` als Markdown und
+kompiliert damit.
+
+**Roadmap danach:** Slides via Typst `touying`, Latein-Vokabelabgleich.

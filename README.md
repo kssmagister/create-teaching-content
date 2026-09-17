@@ -202,14 +202,23 @@ nutzen, siehe unten.
 
 ---
 
-## Andere Ausgabeformate (Pandoc)
+## Andere Ausgabeformate (`export.py`, Pandoc)
 
-Neben PDF (Typst) ist der einfachste Weg zu weiteren Formaten **Pandoc** –
-nicht der im Ausgangsdokument beschriebene „eine-Bibliothek-pro-Format"-Weg
-(`python-docx` liest z. B. kein HTML). Pandoc kann aus Markdown/HTML u. a.
-DOCX, EPUB, ODT, LaTeX erzeugen. Ein Markdown-Export der Unit lässt sich damit
-weiterverarbeiten. (Noch nicht als Skript enthalten – bewusst als nächster
-Ausbauschritt, siehe [PRD.md](PRD.md).)
+Neben PDF (Typst) gibt es weitere Formate über **Pandoc**:
+
+```bash
+python export.py units/001-schweiz-2wk                          # DOCX (Standard)
+python export.py units/001-schweiz-2wk --format epub
+python export.py units/001-schweiz-2wk --format odt --variant student
+python export.py units/001-schweiz-2wk --solutions --open
+```
+
+`export.py` baut aus `editorial.json` dieselbe Dramaturgie wie `build.py`
+(Lernziele → [Lehrerhinweise] → Vorwissen → Einleitung → Haupttext →
+Verständnisfragen → Aufgaben → Glossar → [Lösungen] → Bibliografie) als
+Markdown (`out/main-<variante>.md`, einsehbar/nachbearbeitbar) und ruft
+anschliessend Pandoc auf. Pandoc ist im Container bereits enthalten (schlankes
+natives Binary, anders als Docling).
 
 ---
 

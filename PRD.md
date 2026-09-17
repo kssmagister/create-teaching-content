@@ -66,7 +66,7 @@ editorial.json (Vertrag, schema-validiert)
 - [x] Ingestion `ingest.py`: `sources/` (PDF/DOCX/PPTX/XLSX/HTML/Scans) →
       Markdown via Docling, separates Image (`Dockerfile.ingest`, Compose-
       Profil `ingest`)
-- [ ] Pandoc-Export (Markdown/HTML → DOCX, EPUB) als `export.py`
+- [x] Pandoc-Export (Markdown → DOCX/EPUB/ODT) als `export.py`
 
 **Phase 3**
 - [ ] Slides aus derselben `editorial.json` (Typst `touying`)
